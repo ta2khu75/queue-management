@@ -2,26 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.custom-menu .ant-menu-item-selected {
+    background-color: #FFF2E7 !important;
+    /* Change the background color */
+    color: #FF7506 !important;
+    /* Change the text color */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.custom-menu .ant-menu-submenu-arrow {
+    display: none;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.custom-menu .ant-menu-item {
+    color: #7E7D88
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.ant-select-focused .ant-select-selector {
+    border-color: #FFAC6A !important;
+    color: #535261 !important;
+}
+
+ .ant-select-open .ant-select-item-option-selected {
+    background-color: black !important;
+    /* Màu nền xanh dương */
+    color: #ffffff !important;
+    /* Màu chữ trắng */
+}
+
+ .ant-select-item-option-selected {
+    background: #FFF2E7 !important;
+}
+
+ .ant-select-item {
+    font-weight: 400 !important;
+    font-size: 16px !important;
+}
+
+.custom-table .ant-table-thead>tr>th {
+    background-color: #FF9138;
+    /* Change header background */
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+    /* Change header text color */
+}
+
+.custom-table .ant-table-tbody>tr>td {
+    font-size: 16px;
+    /* Change body background */
+    color: #535261;
+    /* Change body text color */
+}
+
+.custom-table .odd-row {
+    background-color: #FFF2E7;
+    /* Apply custom background color to even rows */
+}
+
+.custom-table .even-row {
+    background-color: #FFFFFF;
+    /* Apply custom background color to odd rows */
 }
