@@ -1,18 +1,18 @@
 "use client"
-import { AvatarInfoElement } from "@/components/element/AvatarInfoElement";
+import HeaderAdmin from "@/components/HeaderAdmin";
 import { db } from "@/config/FirebaseConfig";
 import useNotification from "@/hook/NotificationHook";
 import BaseService from "@/service/BaseService";
-import { Breadcrumb, Form, FormProps, Input, Select } from "antd"
+import { Button, Form, FormProps, Input, Select } from "antd"
 import { collection } from "firebase/firestore";
-import Link from "next/link"
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
     const deviceCollectionRef = collection(db, "devices")
     const router = useRouter()
+    const pathname = usePathname()
     const { contextHolder, openNotification } = useNotification();
-    const onFinish: FormProps<Device>['onFinish'] = (values) => {
+    const onFinish: FormProps<Account>['onFinish'] = (values) => {
         console.log(values);
         BaseService.create(deviceCollectionRef, values).then(() => {
             openNotification('success', "Thêm thiết bị thành công");
@@ -26,30 +26,13 @@ const page = () => {
     return (
         <div className="flex flex-col">
             {contextHolder}
-            <header className="flex justify-between items-center" style={{ height: "88px" }} >
-                <Breadcrumb
-                    separator=">"
-                    className="text-xl font-bold"
-                    items={[
-                        {
-                            title: 'Thiết bị',
-                        },
-                        {
-                            title: <Link href="/manager/device/list">Danh sách thiết bị</Link>,
-                        },
-                        {
-                            title: <Link href="/manager/device/add"> <span className="text-primary">Thêm thiết bị</span></Link>,
-                        }
-                    ]}
-                />
-                <AvatarInfoElement />
-            </header>
-            <Form onFinish={onFinish} layout="vertical" className="flex flex-col">
+            <HeaderAdmin paths={[{ path: "", title: "Thiết bị" }, { path: "/manager/device/list", title: "Danh sách thiết bị" }, { path: pathname, title: "Thêm thiết bị" }]} />
+            <p className="text-2xl font-bold text-primary py-4">Quản lý thiết bị</p>
+            <Form onFinish={onFinish} layout="vertical" className="flex flex-col w-[1152px]" >
                 <main className="flex flex-col">
-                    <p className="text-2xl font-bold text-primary">Quản lý thiết bị</p>
-                    <div className="bg-white rounded-2xl py-4 px-6 mt-4" style={{ height: "550px" }}>
+                    <div className="bg-white rounded-2xl px-6 py-4" style={{ height: "550px" }}>
                         <p className="text-xl text-primary mb-4 font-bold ">Thông tin thiết bị</p>
-                        <div className="grid grid-cols-2 gap-5">
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                             <Form.Item<Device> className="mb-0"
                                 label="Mã thiết bị:"
                                 name={"device_id"}
@@ -111,13 +94,13 @@ const page = () => {
                         </div>
                     </div>
                 </main >
-                <div className="flex justify-center items-center mt-10">
-                    <button className="text-base border-primary mr-4 text-primary border rounded-lg bg-[#FFF2E7] h-12" style={{ width: '147px' }}>Hủy bỏ</button>
-                    <button className="text-base bg-primary ml-4 text-white h-12 rounded-lg" type="submit" style={{ width: "147px" }}>Thêm thiết bị</button>
+                <div className="flex justify-center items-center mt-6">
+                    <Button className="h-12 mr-4" onClick={() => router.push("/manager/device/list")} style={{ width: "147px" }}>Hủy bỏ</Button>
+                    <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Thêm thiết bị</Button>
                 </div>
             </Form>
         </div >
     )
 }
 
-export default page
+export default Page

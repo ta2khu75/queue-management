@@ -1,5 +1,5 @@
 'use client'
-import { Menu, MenuProps } from "antd";
+import { Button, Menu, MenuProps } from "antd";
 import { useEffect, useState } from "react";
 import { AppstoreOutlined, BlockOutlined, DesktopOutlined, CommentOutlined, SettingOutlined, BarChartOutlined, MoreOutlined, LogoutOutlined } from "@ant-design/icons";
 import { LogoElement } from "./element/LogoElement";
@@ -58,11 +58,11 @@ export const AsideAdmin = () => {
         },
         {
             key: 'sub6',
-            label: <span className="text-[#7E7D88]">Cài đặt hệ thống<MoreOutlined /></span>,
-            icon: <SettingOutlined className="text-[#7E7D88]" />,
+            label: <>Cài đặt hệ thống<MoreOutlined /></>,
+            icon: <SettingOutlined />,
             children: [
-                { key: '9', label: <span className="text-[#7E7D88]">Quản lý vai trò</span> },
-                { key: '10', label: <span className="text-[#7E7D88]">Quản lý tài khoản</span> },
+                { key: '9', label: <span className="text-[#7E7D88]">Quản lý vai trò</span>, onClick: () => router.push("/manager/setting/role/list") },
+                { key: '10', label: <span className="text-[#7E7D88]">Quản lý tài khoản</span>, onClick: () => router.push("/manager/setting/account/list") },
                 { key: '11', label: <span className="text-[#7E7D88]">Nhật ký người dùng</span> },
             ],
         },
@@ -81,7 +81,7 @@ export const AsideAdmin = () => {
                     className="grow"
                     items={items}
                 />
-                <button className="rounded-lg mx-auto mb-5" style={{ width: "176px", height: "48px", backgroundColor: '#FFF2E7', color: "#FF7506" }}><LogoutOutlined className="mr-2" /><span>Đăng xuất</span></button>
+                <Button className="flex justify-start h-12 w-44 font-bold" type="text"><LogoutOutlined className="mr-2" /><span>Đăng xuất</span></Button>
             </div>
         </div>
     )

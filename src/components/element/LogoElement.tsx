@@ -1,5 +1,5 @@
 import Image from "next/image"
-import logo from "../../../public/1615793217.png"
+import logo from "../../../public/logo.png"
 type Props = {
     width: number,
     height: number,

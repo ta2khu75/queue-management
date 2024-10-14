@@ -1,20 +1,21 @@
 "use client"
-import image from "../../../public/Screenshot_20241007_163526.png"
-import { Form, Input } from "antd"
+import image from "../../../public/forgot.png"
+import { Button, Form, Input } from "antd"
 import { AuthPage } from "@/components/AuthPage"
+import { useRouter } from "next/navigation"
 const page = () => {
+    const router = useRouter()
     return (
-        <AuthPage image={image}>
-            <Form layout='vertical' className='mt-16' style={{ width: "400px" }}>
-                <Form.Item label="Vui lòng nhập email để đặt lại mật khẩu của bạn *">
+        <AuthPage image={image} >
+            <Form layout='vertical' className="auth" style={{ width: "400px" }}>
+                <p className="text-[22px] font-bold text-center leading-[33px] mb-4">Đặt lại mật khẩu</p>
+                <Form.Item label={<span className="text-[17px]">Vui lòng nhập email để đặt lại mật khẩu của bạn *</span>}>
                     <Input />
                 </Form.Item>
-                <Form.Item className='mt-7'>
-                    <div className="flex justify-around">
-                        <button className='text-primary border-primary border font-bold rounded text-center' style={{ width: "162px", height: "40px" }}>Hủy</button>
-                        <button className='bg-primary text-white font-bold rounded text-center' style={{ width: "162px", height: "40px" }} > Tiếp tục</button>
-                    </div>
-                </Form.Item>
+                <div className="flex justify-around mt-12">
+                    <Button onClick={() => router.push("/login")} className="h-10 w-[160px]" style={{ backgroundColor: "white" }}>Hủy</Button>
+                    <Button className="h-10 w-[160px]" type="primary">Tiếp tục</Button>
+                </div>
             </Form>
         </AuthPage>
     )

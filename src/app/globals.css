@@ -3,10 +3,8 @@
 @tailwind utilities;
 
 .custom-menu .ant-menu-item-selected {
-    background-color: #FFF2E7 !important;
-    /* Change the background color */
-    color: #FF7506 !important;
-    /* Change the text color */
+    color: #FFFFFF !important;
+    background-color: #FF7506;
 }
 
 .custom-menu .ant-menu-submenu-arrow {
@@ -14,7 +12,15 @@
 }
 
 .custom-menu .ant-menu-item {
-    color: #7E7D88
+    color: #7E7D88 !important;
+    font-weight: 600,
+}
+
+.custom-menu .ant-menu-item:hover {
+    background-color: #FFF2E7 !important;
+    /* Change the background color */
+    color: #FF7506 !important;
+    /* Change the text color */
 }
 
 .ant-select-focused .ant-select-selector {
@@ -22,20 +28,30 @@
     color: #535261 !important;
 }
 
- .ant-select-open .ant-select-item-option-selected {
+.ant-select-open .ant-select-item-option-selected {
     background-color: black !important;
     /* Màu nền xanh dương */
     color: #ffffff !important;
     /* Màu chữ trắng */
 }
 
- .ant-select-item-option-selected {
+.ant-select-item-option-selected {
     background: #FFF2E7 !important;
 }
 
- .ant-select-item {
+.ant-select-item {
     font-weight: 400 !important;
     font-size: 16px !important;
+}
+
+.ant-select {
+    height: 44px !important;
+}
+
+.ant-select-arrow {
+    color: #FF7506 !important;
+    font-size: 17px !important;
+    /* Change arrow icon color */
 }
 
 .custom-table .ant-table-thead>tr>th {
@@ -62,4 +78,133 @@
 .custom-table .even-row {
     background-color: #FFFFFF;
     /* Apply custom background color to odd rows */
+}
+
+.ant-btn-primary {
+    background-color: #FF9138;
+    font-weight: bold;
+}
+
+.ant-btn {
+    border-radius: 8px;
+}
+
+.ant-btn-primary:hover {
+    background-color: #f8a45e !important;
+}
+
+.ant-btn-default {
+    background-color: #FFF2E7;
+    border: #FF7506 solid 1.5px;
+    color: #FF9138;
+    font-weight: bold;
+}
+
+.ant-btn-default:hover {
+    background-color: #ffe0c6 !important;
+    color: #ff811a !important;
+    border-color: #ff811a !important;
+
+}
+
+.ant-btn-text {
+    background-color: #FFF2E7;
+    color: #FF9138;
+}
+
+.ant-btn-text:hover {
+    background-color: #ffe7d2 !important;
+    color: #FF9138 !important;
+}
+
+.auth .ant-input {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.custom .ant-input {
+    font-size: 16px !important;
+    line-height: 24px;
+}
+
+.disable .ant-input {
+    font-size: 16px !important;
+    margin-bottom: 0px;
+    line-height: 24px;
+}
+
+
+.ant-input {
+    height: 44px;
+    color: #535261 !important;
+    font-weight: 400 !important;
+}
+
+.auth .ant-input-password {
+    font-size: 18px;
+    line-height: 27px;
+    display: flex;
+    align-items: center;
+    height: 44px;
+}
+
+.custom .ant-input-password {
+    font-size: 16px;
+    line-height: 27px;
+    display: flex;
+    align-items: center;
+    height: 44px;
+}
+
+.auth .ant-form-item-label>label {
+    color: #37474F !important;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    font-weight: 400 !important;
+}
+
+.custom .ant-form-item-label>label {
+    color: #282739;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.disable .ant-form-item-label>label {
+    color: #282739;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.ant-form-item {
+    margin-bottom: 0px !important;
+}
+
+.disable .ant-form-item {
+    margin-top: 0px !important;
+    /* margin-bottom: 24px !important; */
+}
+
+h6 {
+    color: #FF7506;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+}
+
+.ant-checkbox-wrapper {
+    margin: 0px !important;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #535261;
+}
+
+.ant-checkbox-inner {
+    border: 1.5px solid #4277FF !important;
+    border-radius: 4px !important;
+    width: 20px !important;
+    height: 20px !important;
 }

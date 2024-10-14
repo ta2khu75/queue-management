@@ -1,16 +1,17 @@
 "use client"
-import { AvatarInfoElement } from '@/components/element/AvatarInfoElement'
-import { Breadcrumb } from 'antd'
-import Link from 'next/link'
+import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { EditFilled } from "@ant-design/icons"
 import BaseService from '@/service/BaseService'
 import { collection } from 'firebase/firestore'
 import { db } from '@/config/FirebaseConfig'
 import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import HeaderAdmin from '@/components/HeaderAdmin'
 const page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "devices")
     const [device, setDevice] = useState<Device>()
+    const pathname = usePathname()
     useEffect(() => { fetchDeviceById() }, [params.id])
     const fetchDeviceById = () => {
         BaseService.getById<Device>(deviceCollectionRef, params.id).then((device) => { setDevice(device) }).then((error) => console.log(error))
@@ -18,26 +19,9 @@ const page = ({ params }: { params: { id: string } }) => {
     const router = useRouter()
     return (
         <div className="flex flex-col">
-            <header className="flex justify-between items-center" style={{ height: "88px" }} >
-                <Breadcrumb
-                    separator=">"
-                    className="text-xl font-bold"
-                    items={[
-                        {
-                            title: 'Thiết bị',
-                        },
-                        {
-                            title: <a href="">Danh sách thiết bị</a>,
-                        },
-                        {
-                            title: <Link href={`/manager/device/details/${params.id}`}> <span className="text-primary">Chi tiết thiết bị</span></Link>,
-                        }
-                    ]}
-                />
-                <AvatarInfoElement />
-            </header>
+            <HeaderAdmin paths={[{ path: "", title: "Thiết bị" }, { path: "/manager/device/list", title: "Danh sách thiết bị" }, { path: pathname, title: "Chi tiết thiết bị" }]} />
+            <h6 className='my-4'>Quản lý thiết bị</h6>
             <main className="flex flex-col flex-none">
-                <p className="text-2xl font-bold text-primary mb-4">Quản lý thiết bị</p>
                 <div className='flex justify-between'>
                     <div className="bg-white rounded-2xl py-4 px-6" style={{ height: "604px" }}>
                         <p className="text-xl text-primary mb-4 font-bold ">Thông tin thiết bị</p>
@@ -72,12 +56,11 @@ const page = ({ params }: { params: { id: string } }) => {
                             </div>
                         </div>
                     </div>
-                    <button onClick={() => router.push(`/manager/device/edit/${params.id}`)} style={{ width: "80px", height: "94px" }} className='bg-[#FFF2E7] text-sm rounded-tl-lg rounded-br-lg py-3 px-1'>
-                        <div className='flex justify-center'><div className=' h-6 w-6 text-white text-sm bg-primary rounded-md'><EditFilled /></div></div>
-                        <div className='text-primary'>Cập nhật thiết bị</div>
-                    </button>
+                    <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push(`/manager/device/edit/${params.id}`)}>
+                        <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><EditFilled /></div>
+                        <div className='text-primary'>Cập nhập <br /> thiết bị</div>
+                    </Button>
                 </div>
-
             </main>
         </div>
     )

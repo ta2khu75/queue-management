@@ -11,7 +11,6 @@ const DeviceTable = () => {
             title: 'Mã thiết bị',
             dataIndex: "device_id",
             key: 'id',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Tên thiết bị',

@@ -1,22 +1,21 @@
 "use client"
-import { Form, Input } from 'antd'
+import { Button, Form, Input } from 'antd'
 import React from 'react'
-import image from "../../../public/Screenshot_20241007_163526.png"
+import image from "../../../public/forgot.png"
 import { AuthPage } from '@/components/AuthPage'
 const page = () => {
     return (
         <AuthPage image={image}>
-            <Form layout='vertical' className='mt-16' style={{ width: "400px" }}>
+            <Form layout='vertical' className='auth' style={{ width: "400px" }}>
+                <p className="text-[22px] font-bold text-center leading-[33px] mb-4">Đặt lại mật khẩu mới</p>
                 <Form.Item label="Mật khẩu ">
-                    <Input.Password />
+                    <Input.Password className='mb-4' />
                 </Form.Item>
                 <Form.Item label="Nhập lại mật khẩu " className='mb-2'>
-                    <Input.Password />
+                    <Input.Password className='mb-12' />
                 </Form.Item>
                 <Form.Item className='text-center'>
-                    <div>
-                        <button className='bg-primary text-white font-bold rounded mt-7 py-2 px-10 mb-2' >Đăng nhập</button><br />
-                    </div>
+                    <Button type="primary" className='h-10 w-[162px]'>Xác nhận</Button>
                 </Form.Item>
             </Form>
         </AuthPage>

@@ -8,18 +8,17 @@ type Props = {
 export const AuthPage = ({ children, image }: Props) => {
     return (
         <div className='mx-auto' style={{ width: "1440px", height: "810px" }}>
-            <div className='flex justify-center'>
-                <div style={{ width: "592px" }} className='bg-[#F6F6F6]'>
-                    <div className='flex justify-center mt-16'>
+            <div className='flex'>
+                <div className='bg-[#F6F6F6] w-[592px] h-[810px]'>
+                    <div className='flex justify-center mb-' style={{ marginTop: "82px", marginBottom: "75px" }}>
                         <LogoElement height={136} width={170} />
                     </div>
-                    <h6 className='text-center mt-14 font-bold text-basis'>Đặt lại mật khẩu</h6>
                     <div className='flex justify-center'>
                         {children}
                     </div>
                 </div>
-                <div style={{ width: 848 }}>
-                    <Image src={image} alt='image' />
+                <div className='grow relative' >
+                    <Image src={image} className='absolute w-[711px] h-[560px] top-[153px] left-[43px]' alt='image' />
                 </div>
             </div>
         </div >

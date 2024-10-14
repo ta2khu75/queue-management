@@ -16,7 +16,7 @@ export default function RootLayout({
     return (
         <div className="flex mx-auto" style={{ width: "1440px", height: "810px" }}>
             <AsideAdmin />
-            <div className="bg-[#F6F6F6] grow pl-5">
+            <div className="bg-[#F6F6F6] grow pl-6">
                 {children}
             </div>
         </div>
