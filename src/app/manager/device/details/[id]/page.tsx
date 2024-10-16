@@ -8,7 +8,7 @@ import { db } from '@/config/FirebaseConfig'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import HeaderAdmin from '@/components/HeaderAdmin'
-const page = ({ params }: { params: { id: string } }) => {
+const Page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "devices")
     const [device, setDevice] = useState<Device>()
     const pathname = usePathname()
@@ -65,4 +65,4 @@ const page = ({ params }: { params: { id: string } }) => {
         </div>
     )
 }
-export default page
+export default Page

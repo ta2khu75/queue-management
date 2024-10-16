@@ -42,13 +42,13 @@ export const AsideAdmin = () => {
             key: "sub3",
             label: 'Dịch vụ',
             icon: <CommentOutlined />,
-            onClick: () => router.push('/manager/service')
+            onClick: () => router.push('/manager/service/list')
         },
         {
             key: 'sub4',
             label: 'Cấp số',
             icon: <BlockOutlined />,
-            onClick: () => router.push('/manager/number')
+            onClick: () => router.push('/manager/number/number-level')
         },
         {
             key: 'sub5',

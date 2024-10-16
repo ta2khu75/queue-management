@@ -7,13 +7,15 @@ import BaseService from "@/service/BaseService";
 import { Button, Checkbox, Form, FormProps, Input } from "antd"
 import { collection } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-const Page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "services")
     const router = useRouter()
     const pathname = usePathname()
     const { contextHolder, openNotification } = useNotification();
     const onFinish: FormProps<Service>['onFinish'] = (values) => {
+        console.log(values);
         BaseService.create(deviceCollectionRef, values).then(() => {
             openNotification('success', "Thêm dịch vụ thành công");
             router.push("/manager/service/list")
@@ -23,12 +25,21 @@ const Page = () => {
             openNotification('error', err);
         })
     };
+    const [form] = Form.useForm<Service>()
+    useEffect(() => {
+        fetchServiceById()
+    }, [])
+    const fetchServiceById = () => {
+        BaseService.getById(deviceCollectionRef, params.id).then((response) => {
+            if (response) form.setFieldsValue(response); console.log(response);
+        }).catch((err) => console.log(err))
+    }
     return (
         <div className="flex flex-col">
             {contextHolder}
             <HeaderAdmin paths={[{ path: "", title: "Dịch vụ" }, { path: "/manager/service/list", title: "Danh sách dịch vụ" }, { path: pathname, title: "Thêm dịch vụ" }]} />
             <h6 className="mb-8 mt-4">Quản lý dịch vụ</h6>
-            <Form onFinish={onFinish} layout="vertical">
+            <Form form={form} onFinish={onFinish} layout="vertical">
                 <div className="flex flex-col h-[534px] w-[1178px] bg-white py-4 rounded-2xl px-6">
                     <p className="text-xl text-primary mb-3 font-bold ">Thông tin dịch vụ</p>
                     <div className="grid grid-cols-2 gap-6">
@@ -56,8 +67,7 @@ const Page = () => {
                         </Form.Item>
                         <div>
                             <p className="text-xl text-primary mb-4 font-bold ">Quy tắc cấp số</p>
-
-                            <Form.Item<Service> name="number_rules">
+                            <Form.Item<Service> name={"number_rules"}>
                                 <Checkbox.Group className="grid grid-cols-1 gap-y-3 mb-[22px]">
                                     <Checkbox value={"auto"} className="flex"><div className="flex items-center"><div className="mr-[15px]">Tăng tự động từ:</div><InputServiceElement value={"0001"} /> <span className="ml-[10px] mr-3">đến</span> <InputServiceElement value="9999" /></div></Checkbox>
                                     <Checkbox value={"prefix"} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Prefix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
@@ -74,9 +84,9 @@ const Page = () => {
                 </div>
                 <div className="flex justify-center items-center mt-6">
                     <Button className="h-12 mr-4" onClick={() => router.push("/manager/device/list")} style={{ width: "147px" }}>Hủy bỏ</Button>
-                    <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Thêm thiết bị</Button>
+                    <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Cập nhật</Button>
                 </div>
-            </Form >
+            </Form>
         </div >
     )
 }
