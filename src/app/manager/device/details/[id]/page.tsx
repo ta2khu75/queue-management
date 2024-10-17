@@ -8,22 +8,30 @@ import { db } from '@/config/FirebaseConfig'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import HeaderAdmin from '@/components/HeaderAdmin'
+import { useAppSelector } from '@/redux/hook'
 const Page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "devices")
+    const deviceState = useAppSelector(state => state.device)
     const [device, setDevice] = useState<Device>()
     const pathname = usePathname()
-    useEffect(() => { fetchDeviceById() }, [params.id])
+    useEffect(() => {
+        if (deviceState.devices.length === 0) {
+            fetchDeviceById()
+        } else {
+            setDevice(deviceState.devices.find((d) => d.id === params.id))
+        }
+    }, [params.id])
     const fetchDeviceById = () => {
-        BaseService.getById<Device>(deviceCollectionRef, params.id).then((device) => { setDevice(device) }).then((error) => console.log(error))
+        BaseService.readById<Device>(deviceCollectionRef, params.id).then((device) => { setDevice(device) }).then((error) => console.log(error))
     }
     const router = useRouter()
     return (
         <div className="flex flex-col">
-            <HeaderAdmin paths={[{ path: "", title: "Thiết bị" }, { path: "/manager/device/list", title: "Danh sách thiết bị" }, { path: pathname, title: "Chi tiết thiết bị" }]} />
+            <HeaderAdmin paths={[{ path: "", title: "Thiết bị" }, { path: "/manager/device", title: "Danh sách thiết bị" }, { path: pathname, title: "Chi tiết thiết bị" }]} />
             <h6 className='my-4'>Quản lý thiết bị</h6>
             <main className="flex flex-col flex-none">
                 <div className='flex justify-between'>
-                    <div className="bg-white rounded-2xl py-4 px-6" style={{ height: "604px" }}>
+                    <div className="bg-white rounded-2xl py-4 px-6" style={{ height: "604px", width: "1112px" }}>
                         <p className="text-xl text-primary mb-4 font-bold ">Thông tin thiết bị</p>
                         <div className='grid grid-cols-2'>
                             <div className='grid grid-cols-4 mb-4'>

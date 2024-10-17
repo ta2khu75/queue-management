@@ -1,7 +1,11 @@
 "use client"
 import { AvatarInfoElement } from "@/components/element/AvatarInfoElement"
+import { useAppDispatch, useAppSelector, useAppStore } from "@/redux/hook"
+import { counterAction } from "@/redux/slice/countSlice"
 import { PlusOutlined, CaretDownOutlined, CalendarOutlined } from "@ant-design/icons"
 const Page = () => {
+    const count = useAppSelector((state) => state.count.value)
+    const dispatch = useAppDispatch()
     return (
         <div className="flex justify-between">
             <div className="w-[790px]">
@@ -86,7 +90,7 @@ const Page = () => {
                 </div>
             </div>
             <div className="bg-white w-[401px] h-[810px] rounded-tl-lg rounded-bl-lg p-6 pt-0">
-                <div className="relative h-[88px] flex items-center mb-4">
+                <div className="relative h-[88px] flex  could not find react-redux context value; please ensure the component is wrapped in a <Provider>items-center mb-4">
                     <div className="absolute right-16">
                         <AvatarInfoElement />
                     </div>
@@ -95,7 +99,9 @@ const Page = () => {
                 <div>
                     <div className="w-[353px] h-[83px] flex rounded-xl">
                         <div>
-                         <div></div>   Đã sử dụng
+                            <div></div>   Đã sử dụng  <h1>{count}</h1>
+                            <button onClick={() => dispatch(counterAction.increment())}>cong</button>
+                            <button onClick={() => dispatch(counterAction.decrement())}>tru</button>
                         </div>
                     </div>
                 </div>

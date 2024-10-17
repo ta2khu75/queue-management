@@ -2,34 +2,49 @@
 import HeaderAdmin from "@/components/HeaderAdmin";
 import { db } from "@/config/FirebaseConfig";
 import useNotification from "@/hook/NotificationHook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { roleAction } from "@/redux/slice/roleSlice";
 import BaseService from "@/service/BaseService";
+import { FetchStatus } from "@/type/FetchStatus";
 import { Button, Checkbox, Form, FormProps, Input } from "antd"
 import { collection } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Page = ({ params }: { params: { id: string } }) => {
+    const dispatch = useAppDispatch()
+    const roleState = useAppSelector(state => state.role)
     const deviceCollectionRef = collection(db, "roles")
+    const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE)
     const [form] = Form.useForm<Role>()
     const router = useRouter()
     const pathname = usePathname()
     const { contextHolder, openNotification } = useNotification();
     useEffect(() => {
-        fetchRole()
+        if (roleState.roles.length === 0) {
+            fetchRole()
+        } else {
+            const role = roleState.roles.find((r) => r.id === params.id)
+            if (role !== undefined) {
+                form.setFieldsValue(role)
+            }
+        }
     }, [params.id])
+    useEffect(() => {
+        if (fetchStatus === FetchStatus.PENDING)
+            if (roleState.fetchStatus === FetchStatus.FULFILLED) {
+                openNotification('success', "Cập nhật thành công");
+                router.push("/manager/setting/role");
+            } else if (roleState.fetchStatus === FetchStatus.REJECTED) {
+                openNotification('error', "Cập nhật thất bại");
+            }
+    }, [roleState.fetchStatus])
     const fetchRole = () => {
-        BaseService.getById<Role>(deviceCollectionRef, params.id).then((role) => { if (role) form.setFieldsValue(role) }).then((error) => console.log(error))
+        BaseService.readById<Role>(deviceCollectionRef, params.id).then((role) => { if (role) form.setFieldsValue(role) }).then((error) => console.log(error))
     }
     const onFinish: FormProps<Role>['onFinish'] = (values) => {
-        console.log(values);
-        BaseService.update(deviceCollectionRef, params.id, values).then(() => {
-            openNotification('success', "Cập nhập thiết bị thành công");
-            router.push("/manager/setting/role/list")
-        }
-        ).catch((err) => {
-            console.log(err);
-            openNotification('error', err);
-        })
+        setFetchStatus(FetchStatus.PENDING)
+        dispatch(roleAction.fetchUpdate({ id: params.id, role: values }))
     };
     const groupPermissions = [
         { group: "Nhóm chức năng A", permissions: ["Tất cả", "Chức năng x", "Chức năng y", "Chức năng z"] },
@@ -37,7 +52,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     return (
         <div className="flex flex-col">
             {contextHolder}
-            <HeaderAdmin paths={[{ path: "", title: "Cài đặt hệ thống" }, { path: "/manager/setting/role/list", title: "Quản lý vai trò" }, { path: pathname, title: "Thêm vai trò" }]} />
+            <HeaderAdmin paths={[{ path: "", title: "Cài đặt hệ thống" }, { path: "/manager/setting/role", title: "Quản lý vai trò" }, { path: pathname, title: "Thêm vai trò" }]} />
             <p className="text-2xl font-bold text-primary pt-4 pb-8">Danh sách vai trò</p>
             <Form form={form} onFinish={onFinish} layout="vertical" className="custom flex flex-col w-[1192px]" >
                 <main className="flex flex-col">
@@ -77,7 +92,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                                                     <p className="text-super_primary text-xl font-bold leading-[30px] mb-4">{groupPermission.group}</p>
                                                     <div className="grid grid-cols-1 gap-y-3">
                                                         {groupPermission.permissions.map((permission, indexPermission) =>
-                                                            (<Checkbox key={`checkbox-permission-${index}-${indexPermission}`} value={index + permission}>{permission}</Checkbox>)
+                                                            (<Checkbox key={`checkbox-permission-${index}-${indexPermission}`} value={`${index}${indexPermission}`}>{permission}</Checkbox>)
                                                         )}
                                                     </div>
                                                 </div>
@@ -90,7 +105,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                     </div>
                 </main >
                 <div className="flex justify-center items-center mt-6">
-                    <Button className="h-12 mr-4" onClick={() => router.push("/manager/device/list")} style={{ width: "147px" }}>Hủy bỏ</Button>
+                    <Button className="h-12 mr-4" onClick={() => router.push("/manager/setting/role")} style={{ width: "147px" }}>Hủy bỏ</Button>
                     <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Cập nhật</Button>
                 </div>
             </Form>

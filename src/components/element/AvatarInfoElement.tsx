@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import logo from "../../../public/avatar.png"
 import { BellFilled } from "@ant-design/icons"
+import { useAppSelector } from '@/redux/hook'
 export const AvatarInfoElement = () => {
+    const auth = useAppSelector(state => state.auth);
     return (
         <div className='flex items-center mr-12'>
             <div className='w-8 h-8 rounded-full bg-[#FFF2E7] flex justify-center mr-6'>
@@ -13,7 +15,7 @@ export const AvatarInfoElement = () => {
                 </div>
                 <div className='ml-2'>
                     <p className='text-[#7E7D88] text-xs'>Xin chào</p>
-                    <p className='text-base'>Lê Quỳnh Ái Vân</p>
+                    <p className='text-base'>{auth.account?.full_name}</p>
                 </div>
             </div>
         </div>

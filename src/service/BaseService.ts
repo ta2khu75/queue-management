@@ -1,4 +1,4 @@
-import { addDoc, CollectionReference, deleteDoc, doc, DocumentData, getDoc, getDocs, query, QueryFieldFilterConstraint, QuerySnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, CollectionReference, deleteDoc, doc, DocumentData, getDoc, getDocs, Query, query, QueryFieldFilterConstraint, QuerySnapshot, updateDoc } from "firebase/firestore";
 
 export default class BaseService {
     static async create<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>, data: T): Promise<T> {
@@ -31,7 +31,7 @@ export default class BaseService {
             throw error;
         }
     }
-    static async query(collectionRef: CollectionReference<DocumentData, DocumentData>, queryFilter: QueryFieldFilterConstraint): Promise<QuerySnapshot<DocumentData, DocumentData>> {
+    static async queries(collectionRef: CollectionReference<DocumentData, DocumentData>, queryFilter: QueryFieldFilterConstraint): Promise<QuerySnapshot<DocumentData, DocumentData>> {
         const queryInstance = query(collectionRef, queryFilter)
         try {
             const querySnapshot = await getDocs(queryInstance);
@@ -41,7 +41,16 @@ export default class BaseService {
             throw error;
         }
     }
-    static async getAll<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>): Promise<T[]> {
+    static async query<T>(queryInstance: Query<DocumentData, DocumentData>): Promise<T[]> {
+        try {
+            const data = await getDocs(queryInstance);
+            return data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id } as T & { id: string })) ?? [];
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    static async readAll<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>): Promise<T[]> {
         try {
             const data = await getDocs(collectionRef);
             return data?.docs?.map((doc) => ({ ...doc.data(), id: doc.id } as T & { id: string })) ?? [];
@@ -50,7 +59,7 @@ export default class BaseService {
             throw error;
         }
     }
-    static async getById<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>, id: string): Promise<T | undefined> {
+    static async readById<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>, id: string): Promise<T | undefined> {
         try {
             const docRef = doc(collectionRef, id);
             const docSnap = await getDoc(docRef);

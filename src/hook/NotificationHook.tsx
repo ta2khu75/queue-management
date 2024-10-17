@@ -9,5 +9,4 @@ const useNotification = () => {
     };
     return { contextHolder, openNotification };
 }
-
 export default useNotification

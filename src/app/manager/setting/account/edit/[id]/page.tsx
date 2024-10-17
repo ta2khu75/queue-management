@@ -9,47 +9,57 @@ import { collection } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CaretDownOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { roleAction } from "@/redux/slice/roleSlice";
+import { accountAction } from "@/redux/slice/accountSlice";
+import { FetchStatus } from "@/type/FetchStatus";
 const Page = ({ params }: { params: { id: string } }) => {
-  const deviceCollectionRef = collection(db, "accounts")
+  const dispatch = useAppDispatch()
+  const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE)
+  const account = useAppSelector(state => state.account)
+  const roles = useAppSelector(state => state.role.roles)
   const router = useRouter()
   const pathname = usePathname()
   const [form] = Form.useForm()
   const { contextHolder, openNotification } = useNotification();
-  const [roles, setRoles] = useState<Role[]>([])
   const onFinish: FormProps<Device>['onFinish'] = (values) => {
-    console.log(values);
-    BaseService.update(deviceCollectionRef, params.id, values).then(() => {
-      openNotification('success', "Cập nhập thiết bị thành công");
-      router.push("/manager/setting/account/list")
-    }
-    ).catch((err) => {
-      console.log(err);
-      openNotification('error', err);
-    })
+    setFetchStatus(FetchStatus.PENDING)
+    dispatch(accountAction.fetchUpdate({ id: params.id, account: values }))
   };
   useEffect(() => {
-    fetchAllRole()
+    if (roles.length === 0) {
+      dispatch(roleAction.fetchReadAll());
+    }
   }, [])
   useEffect(() => {
-    fetchAccountById()
+    if (account.accounts.length === 0) {
+      fetchAccountById()
+    } else {
+      const accountExisting = account.accounts.find((a) => a.id === params.id)
+      if (accountExisting !== undefined) {
+        form.setFieldsValue(accountExisting)
+      }
+    }
   }, [params.id])
+  useEffect(() => {
+    if (fetchStatus !== FetchStatus.IDLE) {
+      if (account.fetchStatus === FetchStatus.REJECTED) {
+        openNotification('error', "Cập nhật tài khoản thất bại");
+      } else if (account.fetchStatus === FetchStatus.FULFILLED) {
+        openNotification('success', "Cập nhật tài khoản thành công");
+        router.push("/manager/setting/account")
+      }
+    }
+  }, [account.fetchStatus])
   const fetchAccountById = () => {
-    BaseService.getById<Role>(collection(db, "accounts"), params.id).then(response => {
+    BaseService.readById<Role>(collection(db, "accounts"), params.id).then(response => {
       form.setFieldsValue(response)
     }).catch((error) => console.log(error))
-  }
-  const fetchAllRole = () => {
-    BaseService.getAll(collection(db, "roles")).then((data) => {
-      setRoles(data)
-    }).catch((err) => {
-      console.log(err);
-      openNotification('error', err);
-    })
   }
   return (
     <div className="flex flex-col">
       {contextHolder}
-      <HeaderAdmin paths={[{ path: "", title: "Cài đặt hệ thống" }, { path: "/manager/setting/account/list", title: "Quản lý tài khoản" }, { path: pathname, title: "Thêm tài khoản" }]} />
+      <HeaderAdmin paths={[{ path: "", title: "Cài đặt hệ thống" }, { path: "/manager/setting/account", title: "Quản lý tài khoản" }, { path: pathname, title: "Thêm tài khoản" }]} />
       <h6 className="mt-4 mb-[10px]">Quản lý tài khoản</h6>
       <Form form={form} onFinish={onFinish} layout="vertical" className="flex flex-col w-[1192px] custom" >
         <main className="flex flex-col">
@@ -59,58 +69,58 @@ const Page = ({ params }: { params: { id: string } }) => {
               <Form.Item<Account> className="mb-0"
                 label="Họ tên"
                 name={"full_name"}
-                rules={[{ required: true, message: 'Vui lòng nhập mã thiết bị' }]}
+                rules={[{ required: true, message: 'Vui lòng nhập họ tên' }]}
               >
                 <Input size="large" placeholder="Nhập họ tên" />
               </Form.Item>
               <Form.Item<Account> className="mb-0"
                 label="Tên đăng nhập:"
                 name={"username"}
-                rules={[{ required: true, message: 'Vui lòng nhập loại thiết bị' }]}
+                rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập' }]}
               >
                 <Input size="large" placeholder="Nhập tên đăng nhập" />
               </Form.Item>
               <Form.Item<Account>
                 label="Số điện thoại"
                 name={"phone_number"}
-                rules={[{ required: true, message: 'Vui lòng nhập tên thiết bị' }]}
+                rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
               >
                 <Input size="large" placeholder="Nhập số điện thoại" />
               </Form.Item>
               <Form.Item<Account>
                 label="Mật khẩu:"
                 name={"password"}
-                rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập' }]}
+                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
               >
-                <Input.Password placeholder="Nhập tài khoản" />
+                <Input.Password placeholder="Nhập mật khẩu" />
               </Form.Item>
               <Form.Item<Account>
                 label="Email"
                 name={"email"}
-                rules={[{ required: true, message: 'Vui lòng nhập địa chỉ IP' }]}
+                rules={[{ required: true, message: 'Vui lòng nhập email' }]}
               >
-                <Input placeholder="Nhập địa chỉ IP" />
+                <Input placeholder="Nhập email" />
               </Form.Item>
               <Form.Item<Account>
                 label="Nhập lại mật khẩu"
                 name={'confirm_password'}
                 rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
               >
-                <Input.Password placeholder="Nhập mật khẩu" />
+                <Input.Password placeholder="Nhập mật khẩu xác nhận" />
               </Form.Item>
               <Form.Item<Account>
                 label="Vai trò"
                 name={'role_id'}
-                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
+                rules={[{ required: true, message: 'Vui lòng chọn vai trò' }]}
               >
-                <Select className="custom-select" placeholder="Chọn loại thiết bị" suffixIcon={<CaretDownOutlined />} options={roles.map((role) => ({ value: role.id, label: role.role_name }))} />
+                <Select className="custom-select" placeholder="Chọn vai trò" suffixIcon={<CaretDownOutlined />} options={roles.map((role) => ({ value: role.id, label: role.role_name }))} />
               </Form.Item>
               <Form.Item<Account>
                 label="Tình trạng"
                 name={'status'}
-                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
+                rules={[{ required: true, message: 'Vui lòng chọn tình trạng' }]}
               >
-                <Select className="custom-select" placeholder="Chọn loại thiết bị" suffixIcon={<CaretDownOutlined />} options={Object.entries(AccountStatus).map(entry => ({ label: entry[1], value: entry[0] }))} />
+                <Select className="custom-select" placeholder="Chọn tình trạng" suffixIcon={<CaretDownOutlined />} options={Object.entries(AccountStatus).map(entry => ({ label: entry[1], value: entry[0] }))} />
               </Form.Item>
               <div className="flex">
                 <span className="text-red-600 mr-1">*</span>
@@ -120,7 +130,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
         </main >
         <div className="flex justify-center items-center mt-[48px]">
-          <Button className="h-12 mr-4" onClick={() => router.push("/manager/device/list")} style={{ width: "147px" }}>Hủy bỏ</Button>
+          <Button className="h-12 mr-4" onClick={() => router.push("/manager/setting/account")} style={{ width: "147px" }}>Hủy bỏ</Button>
           <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Cập nhật</Button>
         </div>
       </Form>

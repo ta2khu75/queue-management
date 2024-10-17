@@ -1,32 +1,38 @@
 "use client"
 import HeaderAdmin from "@/components/HeaderAdmin";
-import { db } from "@/config/FirebaseConfig";
 import useNotification from "@/hook/NotificationHook";
-import BaseService from "@/service/BaseService";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { deviceAction } from "@/redux/slice/deviceSlice";
+import { FetchStatus } from "@/type/FetchStatus";
 import { Button, Form, FormProps, Input, Select } from "antd"
-import { collection } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Page = () => {
-    const deviceCollectionRef = collection(db, "devices")
+    const deviceFetchState = useAppSelector(state => state.device.fetchStatus)
+    const dispatch = useAppDispatch()
+    const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE);
     const router = useRouter()
     const pathname = usePathname()
     const { contextHolder, openNotification } = useNotification();
     const onFinish: FormProps<Account>['onFinish'] = (values) => {
-        console.log(values);
-        BaseService.create(deviceCollectionRef, values).then(() => {
-            openNotification('success', "Thêm thiết bị thành công");
-            router.push("/manager/device/list")
-        }
-        ).catch((err) => {
-            console.log(err);
-            openNotification('error', err);
-        })
+        setFetchStatus(FetchStatus.PENDING)
+        dispatch(deviceAction.fetchCreate(values))
     };
+    useEffect(() => {
+        if (fetchStatus !== FetchStatus.IDLE) {
+            if (deviceFetchState === FetchStatus.REJECTED) {
+                openNotification('error', "Thêm thiết bị thất bại");
+            } else if (deviceFetchState === FetchStatus.FULFILLED) {
+                openNotification('success', "Thêm thiết bị thành công");
+                router.push("/manager/device");
+            }
+        }
+    }, [deviceFetchState])
     return (
         <div className="flex flex-col">
             {contextHolder}
-            <HeaderAdmin paths={[{ path: "", title: "Thiết bị" }, { path: "/manager/device/list", title: "Danh sách thiết bị" }, { path: pathname, title: "Thêm thiết bị" }]} />
+            <HeaderAdmin paths={[{ path: "", title: "Thiết bị" }, { path: "/manager/device", title: "Danh sách thiết bị" }, { path: pathname, title: "Thêm thiết bị" }]} />
             <p className="text-2xl font-bold text-primary py-4">Quản lý thiết bị</p>
             <Form onFinish={onFinish} layout="vertical" className="flex flex-col w-[1152px]" >
                 <main className="flex flex-col">
@@ -95,7 +101,7 @@ const Page = () => {
                     </div>
                 </main >
                 <div className="flex justify-center items-center mt-6">
-                    <Button className="h-12 mr-4" onClick={() => router.push("/manager/device/list")} style={{ width: "147px" }}>Hủy bỏ</Button>
+                    <Button className="h-12 mr-4" onClick={() => router.push("/manager/device")} style={{ width: "147px" }}>Hủy bỏ</Button>
                     <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Thêm thiết bị</Button>
                 </div>
             </Form>

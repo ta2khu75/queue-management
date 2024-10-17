@@ -4,23 +4,30 @@ import image from "../../../public/login.png"
 import { Button, Form, FormProps, Input } from 'antd'
 import { ExclamationCircleOutlined } from "@ant-design/icons"
 import Link from 'next/link'
-import { AuthPage } from '@/components/AuthPage'
-import { auth } from '@/config/FirebaseConfig'
-import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { LogoElement } from '@/components/element/LogoElement'
-const page = () => {
+import { collection, limit, query, where } from 'firebase/firestore'
+import { db } from '@/config/FirebaseConfig'
+import BaseService from '@/service/BaseService'
+import { useAppDispatch } from '@/redux/hook'
+import { authAction } from '@/redux/slice/authSlice'
+const Page = () => {
   const [errorLogin, setErrorLogin] = useState(false)
+  const accountCollenctionRef = collection(db, "accounts")
+  const dispatch = useAppDispatch();
   const router = useRouter()
   const onFinish: FormProps<User>['onFinish'] = async (values) => {
-    try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      router.push("/manager")
-    } catch (error: any) {
-      console.error("Error logging in:", error);
-      setErrorLogin(true)
-    }
+    BaseService.query<Account>(query(accountCollenctionRef, where("username", "==", values.username), limit(1))).then((data) => {
+      if (data.length > 0 && data[0].password == values.password) {
+        dispatch(authAction.set(data[0]))
+        router.push("/manager")
+      } else {
+        setErrorLogin(true)
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
   }
   return (
     <div className='mx-auto' style={{ width: "1440px", height: "810px" }}>
@@ -31,11 +38,11 @@ const page = () => {
           </div>
           <div className='flex justify-center'>
             <Form layout='vertical' onFinish={onFinish} style={{ width: "400px" }}>
-              <Form.Item<User> label="Tên đăng nhập *" className='auth' name={'email'}>
-                <Input className='mb-4 auth' />
+              <Form.Item<User> label="Tên đăng nhập *" className='auth' name={'username'}>
+                <Input className='mb-4 auth' status={errorLogin ? "error" : ""} />
               </Form.Item>
               <Form.Item<User> label="Mật khẩu *" className='auth' name={'password'}>
-                <Input.Password className='mb-3 auth' />
+                <Input.Password className='mb-3 auth' status={errorLogin ? "error" : ""} />
               </Form.Item>
               {errorLogin &&
                 < span className='text-red-600'><ExclamationCircleOutlined /> <span className='ml-1'>Sai tài khoản hoặc mật khẩu</span></span>
@@ -63,4 +70,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

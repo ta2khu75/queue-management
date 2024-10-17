@@ -12,7 +12,7 @@ const Page = () => {
         <div className="flex flex-col">
             <HeaderAdmin paths={[{ title: "Cài đặt hệ thống", path: "" }, { title: "Quản lý vai trò", path: pathname }]} />
             <div className='flex justify-between w-[1112px] my-4'>
-                <h6> Danh sách vai trò</h6>
+                <h6>Danh sách vai trò</h6>
                 <Form layout='vertical'>
                     <Form.Item label="Từ khoá" className="col-start-5 col-span-1 mb-0">
                         <Input.Search size="large" placeholder="Nhập từ khóa" style={{ width: "300px" }} />

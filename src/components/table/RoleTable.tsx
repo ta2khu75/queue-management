@@ -1,9 +1,8 @@
-import { db } from "@/config/FirebaseConfig";
-import BaseService from "@/service/BaseService";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { roleAction } from "@/redux/slice/roleSlice";
 import { Table, TableProps } from "antd";
-import { collection } from "firebase/firestore";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const RoleTable = () => {
     const columns: TableProps<Role>['columns'] = [
@@ -28,18 +27,16 @@ const RoleTable = () => {
             render: (text) => <Link href={`/manager/setting/role/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
-    const [data, setData] = useState<Role[]>([])
-    const deviceCollectionRef = collection(db, "roles")
+    const roleState = useAppSelector(state => state.role)
+    const dispatch = useAppDispatch()
     useEffect(() => {
-        fetchAllDevices()
+        if (roleState.roles.length === 0)
+            dispatch(roleAction.fetchReadAll())
     }, [])
-    const fetchAllDevices = async () => {
-        BaseService.getAll<Role>(deviceCollectionRef).then(response => setData(response))
-    }
     return <Table<Device> style={{ width: "1112px" }}
         bordered
         rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
-        className="custom-table" columns={columns} dataSource={data} />
+        className="custom-table" columns={columns} dataSource={roleState.roles} />
 }
 
 export default RoleTable

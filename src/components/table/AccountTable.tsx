@@ -53,7 +53,7 @@ const AccountTable = () => {
         fetchAllRole()
     }, [])
     const fetchAllRole = () => {
-        BaseService.getAll<Role>(collection(db, "roles")).then((data) => {
+        BaseService.readAll<Role>(collection(db, "roles")).then((data) => {
             setRoleMap(data.reduce((account, item) => {
                 account.set(item.id, item);
                 return account;
@@ -63,7 +63,7 @@ const AccountTable = () => {
         })
     }
     const fetchAllAccount = async () => {
-        BaseService.getAll<Device>(deviceCollectionRef).then(response => setData(response))
+        BaseService.readAll<Device>(deviceCollectionRef).then(response => setData(response))
     }
     return <Table<Device> style={{ width: "1112px" }}
         bordered

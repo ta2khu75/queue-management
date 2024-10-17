@@ -15,7 +15,7 @@ const Page = () => {
         fetchAllAccount()
     }, [])
     const fetchAllAccount = () => {
-        BaseService.getAll(collection(db, "roles")).then((response) => {
+        BaseService.readAll(collection(db, "roles")).then((response) => {
             setRoles(response)
         }).catch(error => console.log(error))
     }
@@ -35,9 +35,9 @@ const Page = () => {
             </Form>
             <div className='flex justify-between'>
                 <AccountTable />
-                <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/device/add')}>
+                <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/setting/account/add')}>
                     <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><PlusOutlined /></div>
-                    <div className='text-primary'>Thêm <br /> thiết bị</div>
+                    <div className='text-primary'>Thêm<br />tài khoản</div>
                 </Button>
             </div>
         </div >

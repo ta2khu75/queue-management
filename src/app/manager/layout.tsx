@@ -12,7 +12,6 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-
     return (
         <div className="flex mx-auto" style={{ width: "1440px", height: "810px" }}>
             <AsideAdmin />

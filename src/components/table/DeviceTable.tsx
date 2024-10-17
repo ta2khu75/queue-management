@@ -1,7 +1,7 @@
-import { db } from "@/config/FirebaseConfig";
-import BaseService from "@/service/BaseService";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { deviceAction } from "@/redux/slice/deviceSlice";
+import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
-import { collection } from "firebase/firestore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -48,18 +48,23 @@ const DeviceTable = () => {
             render: (text) => <Link href={`/manager/device/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
-    const [data, setData] = useState<Device[]>([])
-    const deviceCollectionRef = collection(db, "devices")
+    const dispatch = useAppDispatch()
+    const deviceState = useAppSelector(state => state.device)
     useEffect(() => {
-        fetchAllDevices()
+        if (deviceState.devices.length === 0) {
+            dispatch(deviceAction.fetchReadAll())
+        }
     }, [])
-    const fetchAllDevices = async () => {
-        BaseService.getAll<Device>(deviceCollectionRef).then(response => setData(response))
+    if (deviceState.fetchStatus === FetchStatus.PENDING) {
+        return <div>loading</div>
+    }
+    if (deviceState.fetchStatus === FetchStatus.REJECTED) {
+        return <div>something wrong</div>
     }
     return <Table<Device> style={{ width: "1112px" }}
         bordered
         rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
-        className="custom-table" columns={columns} dataSource={data} />
+        className="custom-table" columns={columns} dataSource={deviceState.devices} />
 }
 
 export default DeviceTable

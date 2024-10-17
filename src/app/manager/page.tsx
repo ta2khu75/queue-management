@@ -5,7 +5,9 @@ import { Form, Input } from "antd"
 import Image from "next/image"
 import avatar from "../../../public/avatar.png"
 import { CameraOutlined } from "@ant-design/icons"
-const page = () => {
+import { useAppSelector } from "@/redux/hook"
+const Page = () => {
+    const auth = useAppSelector(state => state.auth)
     return (
         <div>
             <header className="flex justify-between items-center" style={{ height: "88px" }} >
@@ -21,21 +23,21 @@ const page = () => {
                                 <CameraOutlined className="text-white text-2xl" />
                             </div>
                         </div>
-                        <div className="text-center leading-9 text-2xl font-bold mt-4">Lê Quỳnh Ái Vân</div>
+                        <div className="text-center leading-9 text-2xl font-bold mt-4">{auth.account?.full_name}</div>
                     </div>
                     <div style={{ width: "792px", height: "276px" }} className="ml-5">
-                        <Form layout="vertical" initialValues={{ username: "Lê Quỳnh Ái Vân", name_login: "lequynhaivan01", phone_number: "0767375921", password: "311940211", email: "adminSSO1@gmail.com", role: "Kế toán" }} className="grid grid-cols-2 gap-5 disable">
-                            <Form.Item
+                        <Form layout="vertical" initialValues={auth.account} className="grid grid-cols-2 gap-5 disable">
+                            <Form.Item<Account>
                                 label="Tên người dùng"
-                                name="username"
+                                name="full_name"
                             >
-                                <Input disabled/>
+                                <Input disabled />
                             </Form.Item>
                             <Form.Item
                                 label="Tên đăng nhập "
-                                name="name_login"
+                                name="username"
                             >
-                                <Input disabled/>
+                                <Input disabled />
                             </Form.Item>
                             <Form.Item
                                 label="Số điện thoại"
@@ -70,4 +72,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

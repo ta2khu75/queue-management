@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AppstoreOutlined, BlockOutlined, DesktopOutlined, CommentOutlined, SettingOutlined, BarChartOutlined, MoreOutlined, LogoutOutlined } from "@ant-design/icons";
 import { LogoElement } from "./element/LogoElement";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 export const AsideAdmin = () => {
     type MenuItem = Required<MenuProps>['items'][number];
     const pathname = usePathname();
@@ -11,17 +12,17 @@ export const AsideAdmin = () => {
     const router = useRouter();
     useEffect(() => {
         // Set the selected key based on the current route
-        if (pathname.endsWith('/dashboard')) {
+        if (pathname.includes('/dashboard')) {
             setSelectedKey('sub1');
-        } else if (pathname.endsWith('/device/list')) {
+        } else if (pathname.includes('/device')) {
             setSelectedKey('sub2');
-        } else if (pathname.endsWith('/service')) {
+        } else if (pathname.includes('/service')) {
             setSelectedKey('sub3');
-        } else if (pathname.endsWith('/number')) {
+        } else if (pathname.includes('/number-level')) {
             setSelectedKey('sub4');
-        } else if (pathname.endsWith('/report')) {
+        } else if (pathname.includes('/report')) {
             setSelectedKey('sub5');
-        } else if (pathname.endsWith('/setting')) {
+        } else if (pathname.includes('/setting')) {
             setSelectedKey('sub6');
         }
     }, [pathname]);
@@ -36,19 +37,19 @@ export const AsideAdmin = () => {
             key: 'sub2',
             label: 'Thiết bị',
             icon: <DesktopOutlined />,
-            onClick: () => router.push('/manager/device/list')
+            onClick: () => router.push('/manager/device')
         },
         {
             key: "sub3",
             label: 'Dịch vụ',
             icon: <CommentOutlined />,
-            onClick: () => router.push('/manager/service/list')
+            onClick: () => router.push('/manager/service')
         },
         {
             key: 'sub4',
             label: 'Cấp số',
             icon: <BlockOutlined />,
-            onClick: () => router.push('/manager/number/number-level')
+            onClick: () => router.push('/manager/number-level')
         },
         {
             key: 'sub5',
@@ -61,18 +62,20 @@ export const AsideAdmin = () => {
             label: <>Cài đặt hệ thống<MoreOutlined /></>,
             icon: <SettingOutlined />,
             children: [
-                { key: '9', label: <span className="text-[#7E7D88]">Quản lý vai trò</span>, onClick: () => router.push("/manager/setting/role/list") },
-                { key: '10', label: <span className="text-[#7E7D88]">Quản lý tài khoản</span>, onClick: () => router.push("/manager/setting/account/list") },
+                { key: '9', label: <span className="text-[#7E7D88]">Quản lý vai trò</span>, onClick: () => router.push("/manager/setting/role") },
+                { key: '10', label: <span className="text-[#7E7D88]">Quản lý tài khoản</span>, onClick: () => router.push("/manager/setting/account") },
                 { key: '11', label: <span className="text-[#7E7D88]">Nhật ký người dùng</span> },
             ],
         },
     ];
     const handleSelect: MenuProps['onSelect'] = ({ key }) => {
-        setSelectedKey(key); // Update the selected key state
+        setSelectedKey(key);
     };
     return (
         <div style={{ width: "200px", height: "810px" }} className="flex flex-col">
-            <LogoElement className="mx-auto pt-8 pb-10" height={64} width={80} />
+            <Link href={"/manager"}>
+                <LogoElement className="mx-auto pt-8 pb-10" height={64} width={80} />
+            </Link>
             <div className="flex flex-col justify-between grow custom-menu">
                 <Menu
                     mode="vertical"
