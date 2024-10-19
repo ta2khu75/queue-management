@@ -64,7 +64,7 @@ export const AsideAdmin = () => {
             children: [
                 { key: '9', label: <span className="text-[#7E7D88]">Quản lý vai trò</span>, onClick: () => router.push("/manager/setting/role") },
                 { key: '10', label: <span className="text-[#7E7D88]">Quản lý tài khoản</span>, onClick: () => router.push("/manager/setting/account") },
-                { key: '11', label: <span className="text-[#7E7D88]">Nhật ký người dùng</span> },
+                { key: '11', label: <span className="text-[#7E7D88]">Nhật ký người dùng</span>, onClick: () => router.push("/manager/setting/user-log") },
             ],
         },
     ];

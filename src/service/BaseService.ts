@@ -1,21 +1,51 @@
-import { addDoc, CollectionReference, deleteDoc, doc, DocumentData, getDoc, getDocs, Query, query, QueryFieldFilterConstraint, QuerySnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, getDoc, getDocs, Query, query, QueryFieldFilterConstraint, QuerySnapshot, updateDoc } from "firebase/firestore";
+import { store } from "../redux/store";
+import { db } from "@/config/FirebaseConfig";
+import dayjs from 'dayjs';
 
 export default class BaseService {
     static async create<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>, data: T): Promise<T> {
         try {
-
             const docRef = await addDoc(collectionRef, data)
             const docSnap = await getDoc(doc(collectionRef, docRef.id))
+            const path = collectionRef.path.split("/").pop();
+            if (path && path !== "number-levels")
+                this.writeLog("Tạo " + this.switchPath(path))
             return { ...docSnap.data(), id: docSnap.id } as T & { id: string };
         } catch (err) {
             console.log(err);
             throw err
         }
     }
+    static switchPath = (path: string) => {
+        switch (path) {
+            case "services":
+                return "dịch vụ"
+            case "devices":
+                return "thiết bị"
+            case "accounts":
+                return "tài khoản"
+            case "roles":
+                return "vai trò"
+        }
+    }
+    static async writeLog(action: string) {
+        const account = store.getState().auth.account;
+        const addressIp = store.getState().address.ip
+        if (account?.id && addressIp) {
+            await addDoc(
+                collection(db, "user-logs")
+                , { account_id: account.username, action, impact_time: dayjs().format('DD/MM/YYYY HH:mm:ss'), address_ip: addressIp })
+        }
+    }
+
     static async update(collectionRef: CollectionReference<DocumentData, DocumentData>, id: string, data: object): Promise<void> {
         const docRef = doc(collectionRef, id);
         try {
             await updateDoc(docRef, { ...data })
+            const path = collectionRef.path.split("/").pop();
+            if (path && path !== "number-levels")
+                this.writeLog("Cập nhập thông tin " + this.switchPath(path) + " " + id)
         } catch (error) {
             console.log(error);
             throw error

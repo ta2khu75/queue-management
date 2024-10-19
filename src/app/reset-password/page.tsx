@@ -1,11 +1,10 @@
 "use client"
 import { Button, Form, Input } from 'antd'
 import React from 'react'
-import image from "../../../public/forgot.png"
 import { AuthPage } from '@/components/AuthPage'
-const page = () => {
+const Page = () => {
     return (
-        <AuthPage image={image}>
+        <AuthPage image={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/forgot.png?alt=media"}>
             <Form layout='vertical' className='auth' style={{ width: "400px" }}>
                 <p className="text-[22px] font-bold text-center leading-[33px] mb-4">Đặt lại mật khẩu mới</p>
                 <Form.Item label="Mật khẩu ">
@@ -22,4 +21,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

@@ -1,0 +1,3 @@
+interface DataParent {
+    name?: string
+}

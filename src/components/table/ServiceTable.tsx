@@ -1,9 +1,9 @@
-import { db } from "@/config/FirebaseConfig";
-import BaseService from "@/service/BaseService";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { serviceAction } from "@/redux/slice/serviceClice";
+import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
-import { collection } from "firebase/firestore";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const ServiceTable = () => {
     const columns: TableProps<Service>['columns'] = [
@@ -39,18 +39,22 @@ const ServiceTable = () => {
             render: (text) => <Link href={`/manager/service/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
-    const [data, setData] = useState<Device[]>([])
-    const deviceCollectionRef = collection(db, "services")
+    const dispatch = useAppDispatch()
+    const serviceState = useAppSelector(state => state.service)
     useEffect(() => {
-        fetchAllAccount()
+        if (serviceState.services.length === 0)
+            dispatch(serviceAction.fetchReadAll())
     }, [])
-    const fetchAllAccount = async () => {
-        BaseService.getAll<Service>(deviceCollectionRef).then(response => setData(response))
+    if (serviceState.fetchStatus === FetchStatus.PENDING) {
+        return <div>loading</div>
+    }
+    if (serviceState.fetchStatus === FetchStatus.REJECTED) {
+        return <div>something wrong</div>
     }
     return <Table<Device> style={{ width: "1112px" }}
         bordered
         rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
-        className="custom-table" columns={columns} dataSource={data} />
+        className="custom-table" columns={columns} dataSource={serviceState.services} />
 }
 
 export default ServiceTable;

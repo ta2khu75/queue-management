@@ -1,9 +1,9 @@
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import React from 'react'
 import { LogoElement } from './element/LogoElement'
 type Props = {
     children: React.JSX.Element,
-    image: StaticImageData
+    image: string
 }
 export const AuthPage = ({ children, image }: Props) => {
     return (
@@ -18,7 +18,7 @@ export const AuthPage = ({ children, image }: Props) => {
                     </div>
                 </div>
                 <div className='grow relative' >
-                    <Image src={image} className='absolute w-[711px] h-[560px] top-[153px] left-[43px]' alt='image' />
+                    <Image src={image} width={711} height={560} className='absolute top-[153px] left-[43px]' alt='image' />
                 </div>
             </div>
         </div >

@@ -1,7 +1,8 @@
-import { db } from "@/config/FirebaseConfig";
-import BaseService from "@/service/BaseService";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { accountAction } from "@/redux/slice/accountSlice";
+import { roleAction } from "@/redux/slice/roleSlice";
+import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
-import { collection } from "firebase/firestore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -46,29 +47,34 @@ const AccountTable = () => {
             render: (text) => <Link href={`/manager/setting/account/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
-    const [data, setData] = useState<Device[]>([])
-    const deviceCollectionRef = collection(db, "accounts")
+    const roleState = useAppSelector(state => state.role)
+    const accountState = useAppSelector(state => state.account)
+    const dispatch = useAppDispatch()
     useEffect(() => {
-        fetchAllAccount()
-        fetchAllRole()
-    }, [])
-    const fetchAllRole = () => {
-        BaseService.readAll<Role>(collection(db, "roles")).then((data) => {
-            setRoleMap(data.reduce((account, item) => {
-                account.set(item.id, item);
-                return account;
+        if (accountState.accounts.length === 0) {
+            dispatch(accountAction.fetchReadAll())
+        }
+        if (roleState.roles.length === 0) {
+            dispatch(roleAction.fetchReadAll())
+        }
+        if (roleState.roles.length > 0 && accountState.accounts.length > 0) {
+            setRoleMap(roleState.roles.reduce((role, item) => {
+                role.set(item.id, item);
+                return role;
             }, new Map()))
-        }).catch((err) => {
-            console.log(err);
-        })
+
+        }
+    }, [])
+    if (accountState.fetchStatus === FetchStatus.PENDING) {
+        return <div>loading</div>
     }
-    const fetchAllAccount = async () => {
-        BaseService.readAll<Device>(deviceCollectionRef).then(response => setData(response))
+    if (accountState.fetchStatus === FetchStatus.REJECTED) {
+        return <div>something wrong</div>
     }
     return <Table<Device> style={{ width: "1112px" }}
         bordered
         rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
-        className="custom-table" columns={columns} dataSource={data} />
+        className="custom-table" columns={columns} dataSource={accountState.accounts} />
 }
 
 export default AccountTable

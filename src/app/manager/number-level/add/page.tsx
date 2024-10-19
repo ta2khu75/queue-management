@@ -9,51 +9,48 @@ import { CaretDownOutlined } from "@ant-design/icons"
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ModalElement from "@/components/element/ModalElement";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { serviceAction } from "@/redux/slice/serviceClice";
+import { NumberLevel } from "@/type/NumberLevel";
+import { NumberLevelStatus } from "@/type/NumberLevelStatus";
+import { NumberRule } from "@/type/NumberRule";
 
 const Page = () => {
     const deviceCollectionRef = collection(db, "services")
+    const dispatch = useAppDispatch()
+    const services = useAppSelector(state => state.service.services)
     const [open, setOpen] = useState(false);
-    const [services, setServices] = useState<Service[]>([])
     const router = useRouter()
     const pathname = usePathname()
     const { contextHolder, openNotification } = useNotification();
-    const onFinish: FormProps<Account>['onFinish'] = (values) => {
-        console.log(values);
-        BaseService.create(deviceCollectionRef, values).then(() => {
-            openNotification('success', "Thêm thiết bị thành công");
-            router.push("/manager/device/list")
-        }
-        ).catch((err) => {
-            console.log(err);
-            openNotification('error', err);
-        })
-    };
-    const fetchAllServices = () => {
-        BaseService.getAll(deviceCollectionRef).then((response) => {
-            setServices(response)
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
     useEffect(() => {
-        fetchAllServices()
+        if (services.length === 0) {
+            dispatch(serviceAction.fetchReadAll())
+        }
     }, [])
+    const onFinish: FormProps<NumberLevel>['onFinish'] = (values) => {
+        const service = services.find(service => service.id === values.service_id);
+
+        if (service?.number_rules) {
+            // if(service.number_rules.includes())
+        }
+
+    };
     return (
         <div className="flex flex-col">
             {contextHolder}
             <HeaderAdmin paths={[{ path: "", title: "Cấp số" }, { path: "/manager/device/list", title: "Danh sách cấp số" }, { path: pathname, title: "Cấp số mới" }]} />
             <p className="text-2xl font-bold text-primary pt-4 pb-6">Quản lý cấp số</p>
             <Form onFinish={onFinish} layout="vertical" className=" text-center w-[1192px] h-[604px] bg-white rounded-2xl" >
-                {/* <div className="w-[400px] flex flex-col items-center"> */}
                 <div className="text-[32px] text-super_primary font-bold leading-8 mt-6 mb-5">CẤP SỐ MỚI</div>
                 <div className="font-bold text-xl leading-[30px] mb-3 text-[#535261]">Dịch vụ khách hàng lựa chọn</div>
                 <div className="flex justify-center mb-20">
-                    <Form.Item className="w-[400px]">
-                        <Select placeholder="Chọn dịch vụ" options={services.map(service => ({ label: service.service_name, value: service.service_id }))} suffixIcon={<CaretDownOutlined />} />
+                    <Form.Item<NumberLevel> name={"service_id"} className="w-[400px]">
+                        <Select placeholder="Chọn dịch vụ" options={services.map(service => ({ label: service.service_name, value: service.id }))} suffixIcon={<CaretDownOutlined />} />
                     </Form.Item>
                 </div>
                 <div className="flex justify-center">
-                    <Button className="mr-8 w-[115px] h-12 ">Hủy bỏ</Button><Button onClick={() => setOpen(true)} className="h-12 w-[115px]" type="primary">In số</Button>
+                    <Button className="mr-8 w-[115px] h-12 ">Hủy bỏ</Button><Button htmlType="submit" className="h-12 w-[115px]" type="primary">In số</Button>
                 </div>
             </Form >
             <ModalElement open={open} handleCancel={() => setOpen(false)}>

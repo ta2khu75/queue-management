@@ -3,10 +3,10 @@
 import { AvatarInfoElement } from "@/components/element/AvatarInfoElement"
 import { Form, Input } from "antd"
 import Image from "next/image"
-import avatar from "../../../public/avatar.png"
 import { CameraOutlined } from "@ant-design/icons"
 import { useAppSelector } from "@/redux/hook"
 const Page = () => {
+
     const auth = useAppSelector(state => state.auth)
     return (
         <div>
@@ -17,7 +17,7 @@ const Page = () => {
             <main className="bg-white flex justify-center items-center mt-[84px]" style={{ width: "1112px", height: "397px" }}>
                 <div className="flex">
                     <div className="relative">
-                        <Image src={avatar} width={248} height={248} alt="avatar" className="rounded-full" />
+                        <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/avatar.png?alt=media"} width={248} height={248} alt="avatar" className="rounded-full" />
                         <div className="absolute top-[206px] left-[171px]">
                             <div className="bg-[#FF7506] h-[45px] w-[45px] rounded-full border-2 border-white flex items-center justify-center">
                                 <CameraOutlined className="text-white text-2xl" />
@@ -68,7 +68,6 @@ const Page = () => {
                 </div>
             </main>
         </div>
-
     )
 }
 

@@ -5,6 +5,7 @@ import useNotification from "@/hook/NotificationHook";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { serviceAction } from "@/redux/slice/serviceClice";
 import { FetchStatus } from "@/type/FetchStatus";
+import { NumberRule } from "@/type/NumberRule";
 import { Button, Checkbox, Form, FormProps, Input } from "antd"
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -66,10 +67,10 @@ const Page = () => {
 
                             <Form.Item<Service> name="number_rules">
                                 <Checkbox.Group className="grid grid-cols-1 gap-y-3 mb-[22px]">
-                                    <Checkbox value={"auto"} className="flex"><div className="flex items-center"><div className="mr-[15px]">Tăng tự động từ:</div><InputServiceElement value={"0001"} /> <span className="ml-[10px] mr-3">đến</span> <InputServiceElement value="9999" /></div></Checkbox>
-                                    <Checkbox value={"prefix"} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Prefix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
-                                    <Checkbox value={"surfix"} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Surfix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
-                                    <Checkbox value={"reset"} className="flex">Reset mỗi ngày</Checkbox>
+                                    <Checkbox value={NumberRule.AUTO} className="flex"><div className="flex items-center"><div className="mr-[15px]">Tăng tự động từ:</div><InputServiceElement value={"0001"} /> <span className="ml-[10px] mr-3">đến</span> <InputServiceElement value="9999" /></div></Checkbox>
+                                    <Checkbox value={NumberRule.PREFIX} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Prefix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
+                                    <Checkbox value={NumberRule.SURFIX} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Surfix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
+                                    <Checkbox value={NumberRule.RESET} className="flex">Reset mỗi ngày</Checkbox>
                                 </Checkbox.Group>
                             </Form.Item>
                             <div className="flex">
@@ -81,7 +82,7 @@ const Page = () => {
                 </div>
                 <div className="flex justify-center items-center mt-6">
                     <Button className="h-12 mr-4" onClick={() => router.push("/manager/service")} style={{ width: "147px" }}>Hủy bỏ</Button>
-                    <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Thêm thiết bị</Button>
+                    <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Thêm dịch vụ</Button>
                 </div>
             </Form >
         </div >

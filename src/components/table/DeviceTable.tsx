@@ -3,7 +3,7 @@ import { deviceAction } from "@/redux/slice/deviceSlice";
 import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const DeviceTable = () => {
     const columns: TableProps<Device>['columns'] = [

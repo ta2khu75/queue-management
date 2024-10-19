@@ -1,5 +1,4 @@
 import Image from "next/image"
-import logo from "../../../public/logo.png"
 type Props = {
     width: number,
     height: number,
@@ -7,6 +6,6 @@ type Props = {
 }
 export const LogoElement = (props: Props) => {
     return (
-        <Image src={logo} {...props} alt="logo" />
+        <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/logo.png?alt=media"} {...props} alt="logo" />
     )
 }

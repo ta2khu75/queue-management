@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { roleAction } from "@/redux/slice/roleSlice";
+import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -33,6 +34,12 @@ const RoleTable = () => {
         if (roleState.roles.length === 0)
             dispatch(roleAction.fetchReadAll())
     }, [])
+    if (roleState.fetchStatus === FetchStatus.PENDING) {
+        return <div>loading</div>
+    }
+    if (roleState.fetchStatus === FetchStatus.REJECTED) {
+        return <div>something wrong</div>
+    }
     return <Table<Device> style={{ width: "1112px" }}
         bordered
         rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
