@@ -2,6 +2,7 @@ import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, 
 import { store } from "../redux/store";
 import { db } from "@/config/FirebaseConfig";
 import dayjs from 'dayjs';
+import { IsUtil } from "@/app/util/IsUtil";
 
 export default class BaseService {
     static async create<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>, data: T): Promise<T> {
@@ -39,13 +40,23 @@ export default class BaseService {
         }
     }
 
+
     static async update(collectionRef: CollectionReference<DocumentData, DocumentData>, id: string, data: object): Promise<void> {
         const docRef = doc(collectionRef, id);
         try {
             await updateDoc(docRef, { ...data })
             const path = collectionRef.path.split("/").pop();
-            if (path && path !== "number-levels")
-                this.writeLog("Cập nhập thông tin " + this.switchPath(path) + " " + id)
+            if (path && path !== "number-levels") {
+                if (IsUtil.isType<Service>(data, "service_id")) {
+                    this.writeLog("Cập nhập thông tin " + this.switchPath(path) + " " + data.service_id)
+                } else if (IsUtil.isType<Device>(data, "device_id")) {
+                    this.writeLog("Cập nhật thông tin " + this.switchPath(path) + " " + data.device_id)
+                } else if (IsUtil.isType<Account>(data, "username")) {
+                    this.writeLog("Cập nhật thông tin " + this.switchPath(path) + " " + data.username)
+                } else if (IsUtil.isType<Role>(data, "role_name")) {
+                    this.writeLog("Cập nhật thông tin " + this.switchPath(path) + " " + data.role_name)
+                }
+            }
         } catch (error) {
             console.log(error);
             throw error

@@ -14,6 +14,10 @@ const Page = () => {
     const dispatch = useAppDispatch()
     const serviceFetchState = useAppSelector(state => state.service.fetchStatus)
     const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE);
+    const [from, setFrom] = useState("0001")
+    const [to, setTo] = useState("9999")
+    const [prefix, setPrefix] = useState("0001")
+    const [surfix, setSurfix] = useState("0001")
     const router = useRouter()
     const pathname = usePathname()
     const { contextHolder, openNotification } = useNotification();
@@ -29,6 +33,20 @@ const Page = () => {
     }, [serviceFetchState])
     const onFinish: FormProps<Service>['onFinish'] = (values) => {
         setFetchStatus(FetchStatus.PENDING)
+        const number_rules = values.number_rules ?? []
+        if (number_rules.includes(NumberRule.AUTO)) {
+            const numberIndex = number_rules.findIndex(number_rule => number_rule === NumberRule.AUTO)
+            number_rules[numberIndex] = `${number_rules[numberIndex]} ${from} ${to}`
+        }
+        if (number_rules.includes(NumberRule.PREFIX)) {
+            const numberIndex = number_rules.findIndex(number_rule => number_rule === NumberRule.PREFIX)
+            number_rules[numberIndex] = `${number_rules[numberIndex]} ${prefix}`
+        }
+        if (number_rules.includes(NumberRule.SURFIX)) {
+            const numberIndex = number_rules.findIndex(number_rule => number_rule === NumberRule.SURFIX)
+            number_rules[numberIndex] = `${number_rules[numberIndex]} ${surfix}`
+        }
+        console.log(values);
         dispatch(serviceAction.fetchCreate(values))
     };
     return (
@@ -67,9 +85,9 @@ const Page = () => {
 
                             <Form.Item<Service> name="number_rules">
                                 <Checkbox.Group className="grid grid-cols-1 gap-y-3 mb-[22px]">
-                                    <Checkbox value={NumberRule.AUTO} className="flex"><div className="flex items-center"><div className="mr-[15px]">Tăng tự động từ:</div><InputServiceElement value={"0001"} /> <span className="ml-[10px] mr-3">đến</span> <InputServiceElement value="9999" /></div></Checkbox>
-                                    <Checkbox value={NumberRule.PREFIX} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Prefix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
-                                    <Checkbox value={NumberRule.SURFIX} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Surfix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
+                                    <Checkbox value={NumberRule.AUTO} className="flex"><div className="flex items-center"><div className="mr-[15px]">Tăng tự động từ:</div><InputServiceElement setValue={setFrom} value={from} /> <span className="ml-[10px] mr-3">đến</span> <InputServiceElement setValue={setTo} value={to} /></div></Checkbox>
+                                    <Checkbox value={NumberRule.PREFIX} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Prefix:</div><InputServiceElement setValue={setPrefix} value={prefix} /></div></Checkbox>
+                                    <Checkbox value={NumberRule.SURFIX} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Surfix:</div><InputServiceElement setValue={setSurfix} value={surfix} /></div></Checkbox>
                                     <Checkbox value={NumberRule.RESET} className="flex">Reset mỗi ngày</Checkbox>
                                 </Checkbox.Group>
                             </Form.Item>

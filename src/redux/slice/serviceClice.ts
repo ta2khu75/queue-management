@@ -91,10 +91,12 @@ const fetchReadAll = createAsyncThunk("services/fetchReadAll", () => {
     return BaseService.readAll(collectionRef).then(data => data).catch(error => { throw error })
 })
 const fetchCreate = createAsyncThunk("services/fetchCreate", (service: Service) => {
-    return BaseService.create(collectionRef, service).then(data => data).catch(error => { throw error })
+    const description = service.description ? service.description : ""
+    return BaseService.create<Service>(collectionRef, { ...service, description }).then(data => data).catch(error => { throw error })
 })
 const fetchUpdate = createAsyncThunk("services/fetchUpdate", (serviceWithId: { id: string, service: Service }) => {
-    return BaseService.update(collectionRef, serviceWithId.id, serviceWithId.service).then(() => ({ ...serviceWithId.service, id: serviceWithId.id })).catch(error => { throw error })
+    const description = serviceWithId.service.description ? serviceWithId.service.description : ""
+    return BaseService.update(collectionRef, serviceWithId.id, { ...serviceWithId.service, description }).then(() => ({ ...serviceWithId.service, id: serviceWithId.id })).catch(error => { throw error })
 })
 const fetchDelete = createAsyncThunk("services/fetchDelete", (id: string) => {
     return BaseService.delete(collectionRef, id).then(() => id).catch(error => { throw error })

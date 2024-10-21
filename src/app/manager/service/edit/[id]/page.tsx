@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { serviceAction } from "@/redux/slice/serviceClice";
 import BaseService from "@/service/BaseService";
 import { FetchStatus } from "@/type/FetchStatus";
+import { NumberRule } from "@/type/NumberRule";
 import { Button, Checkbox, Form, FormProps, Input } from "antd"
 import { collection } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,6 +17,10 @@ const Page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "services")
     const serviceState = useAppSelector(state => state.service)
     const dispatch = useAppDispatch()
+    const [from, setFrom] = useState("0001")
+    const [to, setTo] = useState("9999")
+    const [prefix, setPrefix] = useState("0001")
+    const [surfix, setSurfix] = useState("0001")
     const router = useRouter()
     const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE)
     const pathname = usePathname()
@@ -23,6 +28,19 @@ const Page = ({ params }: { params: { id: string } }) => {
     const [form] = Form.useForm<Service>()
     const onFinish: FormProps<Service>['onFinish'] = (values) => {
         setFetchStatus(FetchStatus.PENDING)
+        const number_rules = values.number_rules ?? []
+        if (number_rules.includes(NumberRule.AUTO)) {
+            const numberIndex = number_rules.findIndex(number_rule => number_rule === NumberRule.AUTO)
+            number_rules[numberIndex] = `${number_rules[numberIndex]} ${from} ${to}`
+        }
+        if (number_rules.includes(NumberRule.PREFIX)) {
+            const numberIndex = number_rules.findIndex(number_rule => number_rule === NumberRule.PREFIX)
+            number_rules[numberIndex] = `${number_rules[numberIndex]} ${prefix}`
+        }
+        if (number_rules.includes(NumberRule.SURFIX)) {
+            const numberIndex = number_rules.findIndex(number_rule => number_rule === NumberRule.SURFIX)
+            number_rules[numberIndex] = `${number_rules[numberIndex]} ${surfix}`
+        }
         dispatch(serviceAction.fetchUpdate({ id: params.id, service: values }))
     };
     useEffect(() => {
@@ -30,7 +48,10 @@ const Page = ({ params }: { params: { id: string } }) => {
             fetchServiceById()
         } else {
             const service = serviceState.services.find((s) => s.id === params.id)
-            if (service !== undefined) form.setFieldsValue(service)
+            if (service !== undefined) {
+                const data = setNumberRulerService({ ...service })
+                form.setFieldsValue(data)
+            }
         }
     }, [params.id])
     useEffect(() => {
@@ -43,10 +64,35 @@ const Page = ({ params }: { params: { id: string } }) => {
             }
         }
     }, [serviceState.fetchStatus])
+
     const fetchServiceById = () => {
-        BaseService.readById(deviceCollectionRef, params.id).then((response) => {
-            if (response) form.setFieldsValue(response)
+        BaseService.readById<Service>(deviceCollectionRef, params.id).then((response) => {
+            if (response) {
+                const service = setNumberRulerService({ ...response })
+                form.setFieldsValue(service)
+            }
         }).catch((err) => console.log(err))
+    }
+    const setNumberRulerService = (service: Service) => {
+        const number_rules = [...service.number_rules ?? []]
+        number_rules?.map((number_rule, index) => {
+            if (number_rule.includes(NumberRule.AUTO)) {
+                const [rule, from, to] = number_rule.split(" ").slice(-3)
+                setFrom(from)
+                setTo(to)
+                number_rules[index] = rule;
+            } else if (number_rule.includes(NumberRule.PREFIX)) {
+                const [rule, prefix] = number_rule.split(" ").slice(-2)
+                setPrefix(prefix)
+                number_rules[index] = rule;
+            } else if (number_rule.includes(NumberRule.SURFIX)) {
+                const [rule, surfix] = number_rule.split(" ").slice(-2)
+                setSurfix(surfix)
+                number_rules[index] = rule;
+            }
+        })
+        service.number_rules = number_rules;
+        return service;
     }
     return (
         <div className="flex flex-col">
@@ -83,9 +129,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                             <p className="text-xl text-primary mb-4 font-bold ">Quy tắc cấp số</p>
                             <Form.Item<Service> name={"number_rules"}>
                                 <Checkbox.Group className="grid grid-cols-1 gap-y-3 mb-[22px]">
-                                    <Checkbox value={"auto"} className="flex"><div className="flex items-center"><div className="mr-[15px]">Tăng tự động từ:</div><InputServiceElement value={"0001"} /> <span className="ml-[10px] mr-3">đến</span> <InputServiceElement value="9999" /></div></Checkbox>
-                                    <Checkbox value={"prefix"} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Prefix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
-                                    <Checkbox value={"surfix"} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Surfix:</div><InputServiceElement value={"0001"} /></div></Checkbox>
+                                    <Checkbox value={"auto"} className="flex"><div className="flex items-center"><div className="mr-[15px]">Tăng tự động từ:</div><InputServiceElement setValue={setFrom} value={from} /> <span className="ml-[10px] mr-3">đến</span> <InputServiceElement setValue={setTo} value={to} /></div></Checkbox>
+                                    <Checkbox value={"prefix"} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Prefix:</div><InputServiceElement setValue={setPrefix} value={prefix} /></div></Checkbox>
+                                    <Checkbox value={"surfix"} className="flex"><div className="flex items-center"><div className="w-[120px] mr-[15px]">Surfix:</div><InputServiceElement setValue={setSurfix} value={surfix} /></div></Checkbox>
                                     <Checkbox value={"reset"} className="flex">Reset mỗi ngày</Checkbox>
                                 </Checkbox.Group>
                             </Form.Item>
