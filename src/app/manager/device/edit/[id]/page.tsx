@@ -2,25 +2,37 @@
 import { db } from "@/config/FirebaseConfig"
 import useNotification from "@/hook/NotificationHook"
 import BaseService from "@/service/BaseService"
-import {  Button, Form, FormProps, Input, Select } from "antd"
+import { Button, Form, FormProps, Input, Select } from "antd"
 import { collection } from "firebase/firestore"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { CaretDownOutlined } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/hook"
 import { FetchStatus } from "@/type/FetchStatus"
-import { deviceAction } from "@/redux/slice/deviceSlice"
 import HeaderAdmin from "@/components/HeaderAdmin"
+import { serviceAction } from "@/redux/slice/serviceClice"
+import { DefaultOptionType } from "antd/es/select"
+import { deviceAction } from "@/redux/slice/deviceSlice"
 
 const Page = ({ params }: { params: { id: string } }) => {
     const [form] = Form.useForm<Device>()
     const dispatch = useAppDispatch()
+    const services = useAppSelector(state => state.service.services)
     const deviceState = useAppSelector(state => state.device)
     const deviceCollectionRef = collection(db, "devices")
     const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE)
     const { contextHolder, openNotification } = useNotification();
     const pathname = usePathname()
     const router = useRouter()
+    const [optionServices, setOptionServices] = useState<DefaultOptionType[]>([])
+    useEffect(() => {
+        if (services.length === 0) {
+            dispatch(serviceAction.fetchReadAll());
+        }
+        else {
+            setOptionServices(services.map(service => ({ label: service.service_name, value: service.id, key: service.id })))
+        }
+    }, [services])
     useEffect(() => {
         if (deviceState.devices.length === 0)
             fetchDeviceById()
@@ -45,9 +57,11 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     }
     const onFinish: FormProps<Device>['onFinish'] = (values) => {
+        console.log(values);
         setFetchStatus(FetchStatus.PENDING)
         dispatch(deviceAction.fetchUpdate({ id: params.id, device: values }))
-    };
+    }
+
     return (
         <div className="flex flex-col">
             {contextHolder}
@@ -106,10 +120,17 @@ const Page = ({ params }: { params: { id: string } }) => {
                         <Form.Item<Device>
                             className="col-span-2 mb-0"
                             label="Dịch vụ sử dụng:"
-                            name={"service"}
+                            name={"service_ids"}
                             rules={[{ required: true, message: 'Vui lòng nhập dịch vụ sử dụng' }]}
                         >
-                            <Input size="large" placeholder="Nhập dịch vụ sử dụng" />
+                            <Select
+                                mode="multiple"
+                                allowClear
+                                style={{ width: '100%' }}
+                                className="multiple"
+                                placeholder="Please select"
+                                options={optionServices}
+                            />
                         </Form.Item>
                     </div>
                 </div>

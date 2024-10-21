@@ -71,10 +71,16 @@ const AccountTable = () => {
     if (accountState.fetchStatus === FetchStatus.REJECTED) {
         return <div>something wrong</div>
     }
-    return <Table<Device> style={{ width: "1112px" }}
-        bordered
-        rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
-        className="custom-table" columns={columns} dataSource={accountState.accounts} />
+    return (
+
+        <div className="h-[546px] w-[1112px]">
+            <Table<Device>
+                bordered
+        pagination={{ pageSize: 9 }}
+        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
+                className="custom-table" columns={columns} dataSource={accountState.accounts} />
+        </div>
+    )
 }
 
 export default AccountTable

@@ -1,16 +1,10 @@
 import { db } from "@/config/FirebaseConfig";
-import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { accountAction } from "@/redux/slice/accountSlice";
-import { roleAction } from "@/redux/slice/roleSlice";
 import BaseService from "@/service/BaseService";
-import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
 import { collection } from "firebase/firestore";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const UserLogTable = () => {
-    const [roleMap, setRoleMap] = useState<Map<number, Role>>()
     const columns: TableProps<UserLog>['columns'] = [
         {
             title: 'Tên đăng nhập',
@@ -42,7 +36,8 @@ const UserLogTable = () => {
     }, [])
     return <Table<UserLog> style={{ width: "1112px" }}
         bordered
-        rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
+        pagination={{ pageSize: 9 }}
+        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
         className="custom-table" columns={columns} dataSource={userLogs} />
 }
 

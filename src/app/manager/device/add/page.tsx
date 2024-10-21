@@ -3,18 +3,22 @@ import HeaderAdmin from "@/components/HeaderAdmin";
 import useNotification from "@/hook/NotificationHook";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { deviceAction } from "@/redux/slice/deviceSlice";
+import { serviceAction } from "@/redux/slice/serviceClice";
 import { FetchStatus } from "@/type/FetchStatus";
 import { Button, Form, FormProps, Input, Select } from "antd"
+import { DefaultOptionType } from "antd/es/select";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = () => {
     const deviceFetchState = useAppSelector(state => state.device.fetchStatus)
+    const services = useAppSelector(state => state.service.services)
     const dispatch = useAppDispatch()
     const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE);
     const router = useRouter()
     const pathname = usePathname()
     const { contextHolder, openNotification } = useNotification();
+    const [optionServices, setOptionServices] = useState<DefaultOptionType[]>([])
     const onFinish: FormProps<Account>['onFinish'] = (values) => {
         setFetchStatus(FetchStatus.PENDING)
         dispatch(deviceAction.fetchCreate(values))
@@ -29,6 +33,14 @@ const Page = () => {
             }
         }
     }, [deviceFetchState])
+    useEffect(() => {
+        if (services.length === 0) {
+            dispatch(serviceAction.fetchReadAll());
+        }
+        else {
+            setOptionServices(services.map(service => ({ label: service.service_name, value: service.id, key: service.id })))
+        }
+    }, [services])
     return (
         <div className="flex flex-col">
             {contextHolder}
@@ -88,10 +100,17 @@ const Page = () => {
                             <Form.Item<Device>
                                 className="col-span-2 mb-0"
                                 label="Dịch vụ sử dụng:"
-                                name={"service"}
-                                rules={[{ required: true, message: 'Vui lòng nhập dịch vụ sử dụng' }]}
+                                name={"service_ids"}
+                                rules={[{ required: true, message: 'Chọn dịch vụ sử dụng' }]}
                             >
-                                <Input size="large" placeholder="Nhập dịch vụ sử dụng" />
+                                <Select
+                                    mode="multiple"
+                                    allowClear
+                                    style={{ width: '100%' }}
+                                    className="multiple"
+                                    placeholder="Please select"
+                                    options={optionServices}
+                                />
                             </Form.Item>
                             <div className="flex">
                                 <span className="text-red-600 mr-1">*</span>

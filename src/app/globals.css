@@ -30,9 +30,7 @@
 
 .ant-select-open .ant-select-item-option-selected {
     background-color: black !important;
-    /* Màu nền xanh dương */
     color: #ffffff !important;
-    /* Màu chữ trắng */
 }
 
 .ant-select-item-option-selected {
@@ -46,6 +44,31 @@
 
 .ant-select {
     height: 44px !important;
+}
+
+
+
+.ant-select-selection-item-content {
+    color: #ffffff !important;
+}
+
+.ant-select-multiple .ant-select {
+    height: 44px !important;
+}
+
+
+.ant-select-multiple .ant-select-selection-item .ant-select-selection-item-remove {
+    color: #ffffff;
+    font-weight: 700;
+    margin-left: 10px;
+    /* Color for the close icon */
+}
+
+
+.ant-select-multiple .ant-select-selection-item {
+    background-color: #FFAC6A !important;
+    color: #ffffff !important;
+    font-weight: 700;
 }
 
 .ant-select-arrow {
@@ -277,4 +300,26 @@ h6 {
     border: none;
     font-size: 18px;
     cursor: pointer;
+}
+
+.ant-pagination .ant-pagination-item-active {
+    background-color: #FF7506;
+    color: #ffffff !important;
+    border-color: #FF7506;
+    /* Change this to your desired color */
+    /* This can also be changed if needed */
+}
+
+.ant-pagination {
+    color: #7E7D88 !important
+}
+
+.custom-row {
+    height: 49px
+}
+
+.custom-row .ant-table-cell {
+    padding: 0px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important
 }

@@ -63,7 +63,8 @@ const DeviceTable = () => {
     }
     return <Table<Device> style={{ width: "1112px" }}
         bordered
-        rowClassName={(record, index) => (index % 2 !== 0 ? 'odd-row' : 'even-row')}
+        pagination={{ pageSize: 9 }}
+        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
         className="custom-table" columns={columns} dataSource={deviceState.devices} />
 }
 
