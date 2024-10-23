@@ -3,8 +3,7 @@ import BaseService from '@/service/BaseService'
 import { FetchStatus } from '@/type/FetchStatus'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { collection } from 'firebase/firestore'
-
+import { collection, orderBy, query } from 'firebase/firestore'
 interface ServiceState {
     services: Service[],
     fetchStatus: FetchStatus
@@ -88,7 +87,7 @@ const servicesSlice = createSlice({
 })
 const collectionRef = collection(db, "services")
 const fetchReadAll = createAsyncThunk("services/fetchReadAll", () => {
-    return BaseService.readAll(collectionRef).then(data => data).catch(error => { throw error })
+    return BaseService.query<Service>(query(collectionRef, orderBy("service_id", "asc"))).then(data => data).catch(error => { throw error })
 })
 const fetchCreate = createAsyncThunk("services/fetchCreate", (service: Service) => {
     const description = service.description ? service.description : ""

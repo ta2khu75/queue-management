@@ -4,8 +4,10 @@ import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect } from "react";
-
-const RoleTable = () => {
+type Props = {
+    keyword: string
+}
+const RoleTable = ({ keyword }: Props) => {
     const columns: TableProps<Role>['columns'] = [
         {
             title: 'Tên vai trò',
@@ -44,7 +46,7 @@ const RoleTable = () => {
         bordered
         pagination={{ pageSize: 9 }}
         rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
-        className="custom-table" columns={columns} dataSource={roleState.roles} />
+        className="custom-table" columns={columns} dataSource={roleState.roles.filter(role => role.role_name?.includes(keyword))} />
 }
 
 export default RoleTable

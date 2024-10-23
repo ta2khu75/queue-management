@@ -3,7 +3,6 @@ import HeaderAdmin from "@/components/HeaderAdmin";
 import { db } from "@/config/FirebaseConfig";
 import useNotification from "@/hook/NotificationHook";
 import BaseService from "@/service/BaseService";
-import { AccountStatus } from "@/type/AccountStatus";
 import { Button, Form, FormProps, Input, Select } from "antd"
 import { collection } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { roleAction } from "@/redux/slice/roleSlice";
 import { accountAction } from "@/redux/slice/accountSlice";
 import { FetchStatus } from "@/type/FetchStatus";
+import { Status } from "@/type/Status";
 const Page = ({ params }: { params: { id: string } }) => {
   const dispatch = useAppDispatch()
   const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE)
@@ -120,7 +120,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 name={'status'}
                 rules={[{ required: true, message: 'Vui lòng chọn tình trạng' }]}
               >
-                <Select className="custom-select" placeholder="Chọn tình trạng" suffixIcon={<CaretDownOutlined />} options={Object.entries(AccountStatus).map(entry => ({ label: entry[1], value: entry[0] }))} />
+                <Select className="custom-select" placeholder="Chọn tình trạng" suffixIcon={<CaretDownOutlined />} options={Object.entries(Status).map(entry => ({ label: entry[1], value: entry[0] }))} />
               </Form.Item>
               <div className="flex">
                 <span className="text-red-600 mr-1">*</span>

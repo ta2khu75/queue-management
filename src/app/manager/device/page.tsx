@@ -5,7 +5,6 @@ import { PlusOutlined, CaretDownOutlined } from "@ant-design/icons"
 import { usePathname, useRouter } from "next/navigation"
 import HeaderAdmin from "@/components/HeaderAdmin"
 const Page = () => {
-    const { Search } = Input;
     const optionActive = ["Tất cả", "Hoạt động", "Ngưng hoạt động"];
     const optionConnect = ["Tất cả", "Kết nối", "Mất kết nối"]
     const router = useRouter();
@@ -24,7 +23,7 @@ const Page = () => {
                     </Form.Item>
                 </div>
                 <Form.Item label="Từ khoá" className="col-start-5 col-span-1 mb-0">
-                    <Search size="large" placeholder="Nhập từ khóa" style={{ width: "300px" }} />
+                    <Input.Search size="large" placeholder="Nhập từ khóa" style={{ width: "300px" }} />
                 </Form.Item>
             </Form>
             <div className='flex justify-between'>

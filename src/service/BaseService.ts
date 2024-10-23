@@ -1,7 +1,6 @@
-import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, getDoc, getDocs, Query, query, QueryFieldFilterConstraint, QuerySnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, Query, query, QueryFieldFilterConstraint, QuerySnapshot, updateDoc } from "firebase/firestore";
 import { store } from "../redux/store";
 import { db } from "@/config/FirebaseConfig";
-import dayjs from 'dayjs';
 import { IsUtil } from "@/app/util/IsUtil";
 
 export default class BaseService {
@@ -36,7 +35,7 @@ export default class BaseService {
         if (account?.id && addressIp) {
             await addDoc(
                 collection(db, "user-logs")
-                , { account_id: account.username, action, impact_time: dayjs().format('DD/MM/YYYY HH:mm:ss'), address_ip: addressIp })
+                , { account_id: account.username, action, impact_time: new Date(), address_ip: addressIp })
         }
     }
 
@@ -90,6 +89,10 @@ export default class BaseService {
             console.log(error);
             throw error;
         }
+    }
+    static async count(collectionRef: CollectionReference<DocumentData, DocumentData>): Promise<number> {
+        const snapshot = await getCountFromServer(collectionRef);
+        return snapshot.data().count;
     }
     static async readAll<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>): Promise<T[]> {
         try {

@@ -14,7 +14,7 @@ export const store = configureStore({
         role: roleReducer,
         account: accountReducer,
         service: serviceReducer,
-        address: addressReducer
+        address: addressReducer,
     }
 });
 export const makeStore = () => {

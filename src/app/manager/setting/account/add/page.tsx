@@ -1,7 +1,6 @@
 "use client"
 import HeaderAdmin from "@/components/HeaderAdmin";
 import useNotification from "@/hook/NotificationHook";
-import { AccountStatus } from "@/type/AccountStatus";
 import { Button, Form, FormProps, Input, Select } from "antd"
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { FetchStatus } from "@/type/FetchStatus";
 import { roleAction } from "@/redux/slice/roleSlice";
 import { accountAction } from "@/redux/slice/accountSlice";
+import { Status } from "@/type/Status";
 const Page = () => {
     const dispatch = useAppDispatch()
     const roles = useAppSelector(state => state.role.roles)
@@ -113,7 +113,7 @@ const Page = () => {
                                 name={'status'}
                                 rules={[{ required: true, message: 'Vui lòng chọn tình trạng' }]}
                             >
-                                <Select className="custom-select" placeholder="Chọn loại thiết bị" suffixIcon={<CaretDownOutlined />} options={Object.entries(AccountStatus).map(entry => ({ label: entry[1], value: entry[0] }))} />
+                                <Select className="custom-select" placeholder="Chọn loại thiết bị" suffixIcon={<CaretDownOutlined />} options={Object.entries(Status).map(entry => ({ label: entry[1], value: entry[0] }))} />
                             </Form.Item>
                             <div className="flex">
                                 <span className="text-red-600 mr-1">*</span>

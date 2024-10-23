@@ -60,7 +60,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                             </div>
                             <div className='col-span-2'>
                                 <div className='font-bold mb-3'>Dịch vụ sử dụng:</div>
-                                <div className='text-[#535261]'>{device?.service}</div>
+                                <div className='text-[#535261]'>{device?.service_ids}</div>
                             </div>
                         </div>
                     </div>

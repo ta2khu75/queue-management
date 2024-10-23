@@ -89,7 +89,7 @@ const numberLevelsSlice = createSlice({
 })
 const collectionRef = collection(db, "number-level")
 const fetchReadAll = createAsyncThunk("numberLevels/fetchReadAll", () => {
-    return BaseService.readAll(collectionRef).then(data => data).catch(error => { throw error })
+    return BaseService.readAll<NumberLevel>(collectionRef).then(data => data).catch(error => { throw error })
 })
 const fetchCreate = createAsyncThunk("numberLevels/fetchCreate", (numberLevel: NumberLevel) => {
     return BaseService.create(collectionRef, numberLevel).then(data => data).catch(error => { throw error })

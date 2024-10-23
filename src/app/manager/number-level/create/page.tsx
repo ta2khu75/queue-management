@@ -44,30 +44,44 @@ const Page = () => {
             console.log(from, to, prefix, surfix, reset ? "true" : "false");
             let numberLevel = ""
             let number = ""
-            let number_existing: NumberLevel | undefined = undefined
+            let number_reset: NumberLevel | undefined = undefined
+            const dataQuery = await BaseService.query<NumberLevel>(query(collectionRef, where("service_id", "==", values.service_id), orderBy("grant_time", "desc"), limit(1)))
             if (reset) {
-                const q = await BaseService.query<NumberLevel>(query(collectionRef, where("service_id", "==", values.service_id), orderBy("grant_time", "desc"), limit(1)))
-                console.log("array", q);
-                if (q.length > 0) {
-                    number_existing = q[0]
-                    console.log("existing", number_existing);
+                if (dataQuery.length > 0 && dataQuery?.[0]?.grant_time instanceof Timestamp && dayjs(new Date(dataQuery[0].grant_time.toMillis())).format("HH:mm DD/MM/YYYY").includes(dayjs().format("HH:mm DD/MM/YYYY"))) {
+                    number_reset = dataQuery[0]
                 }
             }
             if (from && to) {
-                if (number_existing) {
-                    let numberParse = parseInt(number_existing.number, 10);
-                    numberParse++
-                    console.log("number-parse", numberParse);
+                if (reset) {
+                    if (number_reset) {
+                        let numberParse = parseInt(number_reset.number, 10);
+                        numberParse++
+                        console.log("number-parse", numberParse);
 
-                    number = numberParse.toString().padStart(number_existing.number.length, "0")
-                    if (number === to) {
-                        number = from
+                        number = numberParse.toString().padStart(to.length, "0")
+                        if (number == to) {
+                            number = from
+                        }
+                        numberLevel = number
+                    } else {
+                        number = from;
+                        numberLevel = number
                     }
-                    numberLevel = number
                 }
                 else {
-                    number = from
-                    numberLevel = from
+                    if (dataQuery.length > 0) {
+                        const numberNotReset = dataQuery[0].number;
+                        let numberParse = parseInt(numberNotReset);
+                        numberParse++
+                        number = numberParse.toString().padStart(to.length, "0")
+                        if (number == to) {
+                            number = from
+                        }
+                        numberLevel = number
+                    } else {
+                        number = from
+                        numberLevel = from
+                    }
                 }
             }
             if (prefix) {

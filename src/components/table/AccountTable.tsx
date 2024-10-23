@@ -5,8 +5,11 @@ import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-const AccountTable = () => {
+type Props = {
+    keyword: string
+    roleId: string
+}
+const AccountTable = ({ keyword, roleId }: Props) => {
     const [roleMap, setRoleMap] = useState<Map<number, Role>>()
     const columns: TableProps<Account>['columns'] = [
         {
@@ -64,7 +67,7 @@ const AccountTable = () => {
             }, new Map()))
 
         }
-    }, [])
+    }, [roleState.roles.length])
     if (accountState.fetchStatus === FetchStatus.PENDING) {
         return <div>loading</div>
     }
@@ -76,9 +79,9 @@ const AccountTable = () => {
         <div className="h-[546px] w-[1112px]">
             <Table<Device>
                 bordered
-        pagination={{ pageSize: 9 }}
-        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
-                className="custom-table" columns={columns} dataSource={accountState.accounts} />
+                pagination={{ pageSize: 9 }}
+                rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
+                className="custom-table" columns={columns} dataSource={accountState.accounts.filter(account => account.username?.includes(keyword) && (roleId === "all" || account.role_id === roleId))} />
         </div>
     )
 }
