@@ -47,7 +47,7 @@ const Page = () => {
             let number_reset: NumberLevel | undefined = undefined
             const dataQuery = await BaseService.query<NumberLevel>(query(collectionRef, where("service_id", "==", values.service_id), orderBy("grant_time", "desc"), limit(1)))
             if (reset) {
-                if (dataQuery.length > 0 && dataQuery?.[0]?.grant_time instanceof Timestamp && dayjs(new Date(dataQuery[0].grant_time.toMillis())).format("HH:mm DD/MM/YYYY").includes(dayjs().format("HH:mm DD/MM/YYYY"))) {
+                if (dataQuery.length > 0 && dataQuery?.[0]?.grant_time instanceof Timestamp && dayjs(new Date(dataQuery[0].grant_time.toMillis())).format("HH:mm DD/MM/YYYY").includes(dayjs().format("DD/MM/YYYY"))) {
                     number_reset = dataQuery[0]
                 }
             }

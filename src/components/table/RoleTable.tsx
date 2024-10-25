@@ -45,7 +45,7 @@ const RoleTable = ({ keyword }: Props) => {
     return <Table<Device> style={{ width: "1112px" }}
         bordered
         pagination={{ pageSize: 9 }}
-        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
+        rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
         className="custom-table" columns={columns} dataSource={roleState.roles.filter(role => role.role_name?.includes(keyword))} />
 }
 

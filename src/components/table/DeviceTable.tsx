@@ -4,8 +4,10 @@ import { FetchStatus } from "@/type/FetchStatus";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect } from "react";
-
-const DeviceTable = () => {
+type Props = {
+    keyword: string
+}
+const DeviceTable = ({ keyword }: Props) => {
     const columns: TableProps<Device>['columns'] = [
         {
             title: 'Mã thiết bị',
@@ -64,8 +66,8 @@ const DeviceTable = () => {
     return <Table<Device> style={{ width: "1112px" }}
         bordered
         pagination={{ pageSize: 9 }}
-        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
-        className="custom-table" columns={columns} dataSource={deviceState.devices} />
+        rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
+        className="custom-table" columns={columns} dataSource={deviceState.devices.filter(device => device.device_name?.includes(keyword))} />
 }
 
 export default DeviceTable

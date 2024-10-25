@@ -20,15 +20,15 @@ const ReportTable = ({ fromTo }: Props) => {
         },
         {
             title: 'Tên dịch vụ',
-            dataIndex: "service",
+            dataIndex: "service_id",
             key: 'service_id',
-            render: (service: Service) => <>{service?.service_name}</>
+            render: (service_id: string) => <>{serviceMap?.get(service_id)?.service_name}</>
         },
         {
             title: 'Thời gian cấp',
             dataIndex: "grant_time",
             key: 'grant_time',
-            render: (grant_time: Timestamp) => <>{dayjs(new Date(grant_time.toMillis())).format("HH:mm DD/MM/YYYY")}</>
+            render: (grant_time: Timestamp) => <>{dayjs(new Date(grant_time?.toMillis())).format("HH:mm DD/MM/YYYY")}</>
         },
         {
             title: "Trạng thái",
@@ -45,35 +45,32 @@ const ReportTable = ({ fromTo }: Props) => {
     const dispatch = useAppDispatch()
     const [numberLevels, setNumberLevels] = useState<NumberLevel[]>()
     const serviceState = useAppSelector(state => state.service)
+    const [serviceMap, setServiceMap] = useState<Map<string, Service>>();
     useEffect(() => {
         if (serviceState.services.length === 0)
             dispatch(serviceAction.fetchReadAll())
         fetchReadAll()
+    }, [])
+    useEffect(() => {
+        if (serviceState.services.length > 0 && serviceMap === undefined) {
+            setServiceMap(serviceState.services.reduce((service, item) => {
+                service.set(item.id, item);
+                return service;
+            }, new Map()))
+        }
     }, [serviceState.services.length])
     useEffect(() => {
         if (fromTo?.[0] && fromTo?.[1]) {
             BaseService.query<NumberLevel>(query(collection(db, "number-levels"), where("grant_time", ">=", fromTo[0].toDate()), where("grant_time", "<=", fromTo[1].toDate()), orderBy("grant_time", "desc"))).then(data => {
-                setNumberLevels(data.map(numberLevel => {
-                    const service = serviceState.services.find(service => service.id == numberLevel.service_id);
-                    if (service) {
-                        numberLevel.service = service
-                    }
-                    return numberLevel
-                }))
+                setNumberLevels(data)
             })
         } else {
             fetchReadAll();
         }
     }, [fromTo])
     const fetchReadAll = async () => {
-        const number_levels = await BaseService.readAll<NumberLevel>(collection(db, "number-levels"))
-        setNumberLevels(number_levels.map(numberLevel => {
-            const service = serviceState.services.find(service => service.id == numberLevel.service_id);
-            if (service) {
-                numberLevel.service = service
-            }
-            return numberLevel
-        }))
+        const number_levels = await BaseService.query<NumberLevel>(query(collection(db, "number-levels"), orderBy("grant_time", "desc")))
+        setNumberLevels(number_levels)
     }
 
     const setBgStatus = (status: string) => {
@@ -84,7 +81,7 @@ const ReportTable = ({ fromTo }: Props) => {
     return <Table<NumberLevel> style={{ width: "1112px" }}
         bordered
         pagination={{ pageSize: 9 }}
-        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
+        rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
         className="custom-table" columns={columns} dataSource={numberLevels} />
 }
 

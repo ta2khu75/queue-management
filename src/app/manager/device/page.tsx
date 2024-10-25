@@ -4,11 +4,15 @@ import { Button, Form, Input, Select } from "antd"
 import { PlusOutlined, CaretDownOutlined } from "@ant-design/icons"
 import { usePathname, useRouter } from "next/navigation"
 import HeaderAdmin from "@/components/HeaderAdmin"
+import { useState } from "react"
+import useDebounce from "@/hook/useDebounce"
 const Page = () => {
     const optionActive = ["Tất cả", "Hoạt động", "Ngưng hoạt động"];
     const optionConnect = ["Tất cả", "Kết nối", "Mất kết nối"]
     const router = useRouter();
     const pathname = usePathname()
+    const [keyword, setKeyword] = useState("")
+    const keywordDebounce = useDebounce(keyword)
     return (
         <div className="flex flex-col">
             <HeaderAdmin paths={[{ title: "Thiết bị", path: "" }, { title: "Danh sách thiết bị", path: pathname }]} />
@@ -23,11 +27,11 @@ const Page = () => {
                     </Form.Item>
                 </div>
                 <Form.Item label="Từ khoá" className="col-start-5 col-span-1 mb-0">
-                    <Input.Search size="large" placeholder="Nhập từ khóa" style={{ width: "300px" }} />
+                    <Input.Search onChange={(e) => setKeyword(e.target.value)} value={keyword} size="large" placeholder="Nhập từ khóa" style={{ width: "300px" }} />
                 </Form.Item>
             </Form>
             <div className='flex justify-between'>
-                <DeviceTable />
+                <DeviceTable keyword={keywordDebounce} />
                 <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/device/add')}>
                     <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><PlusOutlined /></div>
                     <div className='text-primary'>Thêm <br /> thiết bị</div>

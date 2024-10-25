@@ -8,4 +8,5 @@ interface Account {
     email?: string;
     role_id?: string;
     status?: string;
+    avatar_url?: string;
 }

@@ -8,19 +8,34 @@ import { db } from '@/config/FirebaseConfig'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import HeaderAdmin from '@/components/HeaderAdmin'
-import { useAppSelector } from '@/redux/hook'
+import { useAppDispatch, useAppSelector } from '@/redux/hook'
+import { serviceAction } from '@/redux/slice/serviceClice'
 const Page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "devices")
     const deviceState = useAppSelector(state => state.device)
     const [device, setDevice] = useState<Device>()
+    const serviceState = useAppSelector(state => state.service)
+    const dispatch = useAppDispatch()
+    const [serviceMap, setServiceMap] = useState<Map<string, Service>>()
     const pathname = usePathname()
     useEffect(() => {
+        if (serviceState.services.length === 0) {
+            dispatch(serviceAction.fetchReadAll())
+        }
         if (deviceState.devices.length === 0) {
             fetchDeviceById()
         } else {
             setDevice(deviceState.devices.find((d) => d.id === params.id))
         }
     }, [params.id])
+    useEffect(() => {
+        if (serviceMap === undefined && serviceState.services.length > 0) {
+            setServiceMap(serviceState.services.reduce((service, item) => {
+                service.set(item.id, item);
+                return service;
+            }, new Map()))
+        }
+    }, [device, serviceState.services.length])
     const fetchDeviceById = () => {
         BaseService.readById<Device>(deviceCollectionRef, params.id).then((device) => { setDevice(device) }).then((error) => console.log(error))
     }
@@ -60,7 +75,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                             </div>
                             <div className='col-span-2'>
                                 <div className='font-bold mb-3'>Dịch vụ sử dụng:</div>
-                                <div className='text-[#535261]'>{device?.service_ids}</div>
+                                <div className='text-[#535261]'>{device?.service_ids?.map(service_id => `${serviceMap?.get(service_id)?.service_name}, `)}</div>
                             </div>
                         </div>
                     </div>

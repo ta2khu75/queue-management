@@ -1,5 +1,6 @@
 export enum NumberLevelStatus {
     WAITING = "Đang chờ",
     USED = "Đã sử dụng",
-    SKIP = "Bỏ qua"
+    SKIP = "Bỏ qua",
+    COMPLETED = "Hoàn thành"
 }

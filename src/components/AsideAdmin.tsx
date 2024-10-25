@@ -5,6 +5,8 @@ import { AppstoreOutlined, BlockOutlined, DesktopOutlined, CommentOutlined, Sett
 import { LogoElement } from "./element/LogoElement";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { authAction } from "@/redux/slice/authSlice";
+import { useAppDispatch } from "@/redux/hook";
 export const AsideAdmin = () => {
     type MenuItem = Required<MenuProps>['items'][number];
     const pathname = usePathname();
@@ -68,9 +70,14 @@ export const AsideAdmin = () => {
             ],
         },
     ];
+    const dispatch = useAppDispatch();
     const handleSelect: MenuProps['onSelect'] = ({ key }) => {
         setSelectedKey(key);
     };
+    const handleLogout = () => {
+        dispatch(authAction.reset())
+        router.push('/login')
+    }
     return (
         <div style={{ width: "200px", height: "810px" }} className="flex flex-col">
             <Link href={"/manager"}>
@@ -84,7 +91,7 @@ export const AsideAdmin = () => {
                     className="grow"
                     items={items}
                 />
-                <Button className="flex justify-start h-12 w-44 font-bold" type="text"><LogoutOutlined className="mr-2" /><span>Đăng xuất</span></Button>
+                <Button className="flex justify-start h-12 w-44 font-bold" onClick={() => handleLogout()} type="text"><LogoutOutlined className="mr-2" /><span>Đăng xuất</span></Button>
             </div>
         </div>
     )

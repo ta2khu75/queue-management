@@ -4,11 +4,12 @@ import { serviceAction } from "@/redux/slice/serviceClice";
 import BaseService from "@/service/BaseService";
 import { NumberLevel } from "@/type/NumberLevel";
 import { Table, TableProps } from "antd";
-import { collection, Timestamp } from "firebase/firestore";
+import { collection, orderBy, query, Timestamp } from "firebase/firestore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import { NumberLevelStatus } from "@/type/NumberLevelStatus";
+import { accountAction } from "@/redux/slice/accountSlice";
 const NumberLevelTable = () => {
     const setBgStatus = (status: string) => {
         if (status === NumberLevelStatus.WAITING) return "bg-[#4277FF]";
@@ -25,12 +26,13 @@ const NumberLevelTable = () => {
             title: 'Tên khách hàng',
             dataIndex: "account_id",
             key: 'account_id',
+            render: (account_id: string) => <>{accountMap?.get(account_id)?.full_name}</>
         },
         {
             title: 'Tên dịch vụ',
-            dataIndex: "service",
+            dataIndex: "service_id",
             key: 'service_id',
-            render: (service: Service) => <>{service?.service_name}</>
+            render: (service_id: string) => <>{serviceMap?.get(service_id)?.service_name}</>
         },
         {
             title: 'Thời gian cấp',
@@ -42,7 +44,7 @@ const NumberLevelTable = () => {
             title: 'Hạn sử dụng',
             dataIndex: "expiry",
             key: "expiry",
-            render: (grant_time: Timestamp) => <>{dayjs(new Date(grant_time.toMillis())).format("HH:mm DD/MM/YYYY")}</>
+            render: (expiry: Timestamp) => <>{dayjs(new Date(expiry.toMillis())).format("HH:mm DD/MM/YYYY")}</>
         },
         {
             title: "Trạng thái",
@@ -58,33 +60,48 @@ const NumberLevelTable = () => {
         {
             dataIndex: "id",
             key: 'details',
-            render: (id) => <Link href={`/ manager / number / details / ${id}`} className="underline text-[#4277FF] decoration-1">Chi tiết</Link>
+            render: (id) => <Link href={`/manager/number-level/details/${id}`} className="underline text-[#4277FF] decoration-1">Chi tiết</Link>
         },
     ];
     useEffect(() => {
     }, [])
     const dispatch = useAppDispatch()
+    const accountState = useAppSelector(state => state.account)
     const [numberLevels, setNumberLevels] = useState<NumberLevel[]>()
     const serviceState = useAppSelector(state => state.service)
+    const [accountMap, setAccountMap] = useState<Map<string, Account>>();
+    const [serviceMap, setServiceMap] = useState<Map<string, Service>>();
     useEffect(() => {
         if (serviceState.services.length === 0)
             dispatch(serviceAction.fetchReadAll())
+        if (accountState.accounts.length === 0)
+            dispatch(accountAction.fetchReadAll())
         fetchReadAll()
-    }, [serviceState.services.length])
-    const fetchReadAll = async () => {
-        const number_levels = await BaseService.readAll<NumberLevel>(collection(db, "number-levels"))
-        setNumberLevels(number_levels.map(numberLevel => {
-            const service = serviceState.services.find(service => service.id == numberLevel.service_id);
-            if (service) {
-                numberLevel.service = service
-            }
-            return numberLevel
-        }))
+    }, [])
+    useEffect(() => {
+        if (accountState.accounts.length > 0 && accountMap === undefined) {
+            setAccountMap(accountState.accounts.reduce((account, item) => {
+                account.set(item.id, item);
+                return account;
+            }, new Map()))
+
+        }
+        if (serviceState.services.length > 0 && serviceMap === undefined) {
+            setServiceMap(serviceState.services.reduce((service, item) => {
+                service.set(item.id, item);
+                return service;
+            }, new Map()))
+        }
+    }, [accountState.accounts.length, serviceState.services.length])
+    const fetchReadAll = () => {
+        BaseService.query<NumberLevel>(query(collection(db, "number-levels"), orderBy("grant_time", "desc"))).then(data => {
+            setNumberLevels(data)
+        })
     }
     return <Table<NumberLevel> style={{ width: "1112px" }}
         bordered
         pagination={{ pageSize: 9 }}
-        rowClassName={`${(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row')} custom-row`}
+        rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
         className="custom-table" columns={columns} dataSource={numberLevels} />
 }
 

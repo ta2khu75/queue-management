@@ -10,7 +10,9 @@ export const AvatarInfoElement = () => {
             </div>
             <div className='flex'>
                 <div className='rounded-full'>
-                    <Image className='rounded-full' src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/avatar.png?alt=media"} width={40} height={40} alt='avatar' />
+
+                    {auth.account?.avatar_url && <Image className='rounded-full h-[40px] w-[40px]' src={auth.account.avatar_url} width={40} height={40} alt='avatar' />}
+                    {!auth.account?.avatar_url && < Image className='rounded-full h-[40px] w-[40px]' objectFit='none' src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/avatar.png?alt=media"} width={40} height={40} alt='avatar' />}
                 </div>
                 <div className='ml-2'>
                     <p className='text-[#7E7D88] text-xs'>Xin chào</p>
