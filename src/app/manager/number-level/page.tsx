@@ -6,15 +6,21 @@ import HeaderAdmin from "@/components/HeaderAdmin"
 import dayjs from 'dayjs';
 import NumberLevelTable from "@/components/table/NumberLevelTable"
 import { useAppDispatch, useAppSelector } from "@/redux/hook"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { serviceAction } from "@/redux/slice/serviceClice"
 import { NumberLevelStatus } from "@/type/NumberLevelStatus"
+import useDebounce from "@/hook/useDebounce"
 const Page = () => {
     const { Search } = Input;
     const services = useAppSelector(state => state.service.services)
     const dispatch = useAppDispatch()
     const router = useRouter();
     const pathname = usePathname()
+    const [fromTo, setFromTo] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null] | null>(null);
+    const [keyword, setKeyword] = useState("")
+    const keywordDebounce = useDebounce(keyword)
+    const [status, setStatus] = useState("all")
+    const [serviceId, setServiceId] = useState("all")
     const dateFormat = 'DD/MM/YYYY';
     useEffect(() => {
         if (services.length === 0) {
@@ -28,29 +34,28 @@ const Page = () => {
             <Form layout="vertical" className="flex justify-between mb-4 w-[1112px]">
                 <div className="flex">
                     <Form.Item label="Tên dịch vụ" className="mb-0">
-                        <Select style={{ width: "154px" }} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" size="large" defaultValue={"Tất cả"} options={[{ label: "Tất cả", value: "all" }, ...services.map((serivce) => ({ label: serivce.service_name, value: serivce.id }))]}></Select>
+                        <Select style={{ width: "154px" }} onChange={(e) => setServiceId(e)} value={serviceId} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" size="large" defaultValue={"Tất cả"} options={[{ label: "Tất cả", value: "all" }, ...services.map((serivce) => ({ label: serivce.service_name, value: serivce.id }))]}></Select>
                     </Form.Item>
                     <Form.Item label="Tình trạng" className="mb-0">
-                        <Select style={{ width: "154px" }} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" size="large" defaultValue={"Tất cả"} options={[{ label: "Tất cả", value: "all" }, ...Object.entries(NumberLevelStatus).map((status) => ({ label: status[1], value: status[1] }))]}></Select>
+                        <Select style={{ width: "154px" }} onChange={(e) => setStatus(e)} value={status} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" options={[{ label: "Tất cả", value: "all" }, ...Object.entries(NumberLevelStatus).map((status) => ({ label: status[1], value: status[1] }))]}></Select>
                     </Form.Item>
                     <Form.Item label="Nguồn cấp" className="mb-0">
-                        <Select style={{ width: "154px" }} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" size="large" defaultValue={"Tất cả"} options={[{ label: "Tất cả", value: "all" }, { label: "Kiosk", value: "kiosk" }, { label: "Hệ thống", value: "system" }]}></Select>
+                        <Select style={{ width: "154px" }} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" defaultValue={"Tất cả"} options={[{ label: "Tất cả", value: "all" }, { label: "Kiosk", value: "kiosk" }, { label: "Hệ thống", value: "system" }]}></Select>
                     </Form.Item>
                     <Form.Item label="Chọn thời gian" className="mb-0 ">
-                        <div className="exam-date-picker">
-                            <DatePicker.RangePicker
-                                defaultValue={[dayjs('01/01/2024', dateFormat), dayjs('01/01/2024', dateFormat)]}
-                                format={dateFormat}
-                            />
-                        </div>
+                        <DatePicker.RangePicker
+                            onChange={(e) => setFromTo(e)}
+                            value={fromTo}
+                            format={dateFormat}
+                        />
                     </Form.Item>
                 </div>
                 <Form.Item label="Từ khoá" className="col-start-5 col-span-1 mb-0">
-                    <Search size="large" placeholder="Nhập từ khóa" style={{ width: "240px" }} />
+                    <Search size="large" onChange={(e) => setKeyword(e.target.value)} placeholder="Nhập từ khóa" style={{ width: "240px" }} />
                 </Form.Item>
             </Form >
             <div className='flex justify-between'>
-                <NumberLevelTable />
+                <NumberLevelTable keyword={keywordDebounce} serviceId={serviceId} status={status} fromTo={fromTo} />
                 <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/number-level/create')}>
                     <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><PlusOutlined /></div>
                     <div className='text-primary'>Cấp<br />

@@ -1,109 +1,55 @@
 "use client"
 import { AvatarInfoElement } from "@/components/element/AvatarInfoElement"
-import { useAppDispatch, useAppSelector, useAppStore } from "@/redux/hook"
-import { counterAction } from "@/redux/slice/countSlice"
-import { PlusOutlined, CaretDownOutlined, CalendarOutlined } from "@ant-design/icons"
+import CalendarElement from "@/components/element/CalendarElement";
+import DashboardCardElement from "@/components/element/DashboardCardElement"
+import DashboardProgressElement from "@/components/element/DashboardProgressElement copy";
+import NumberLevelProgressElement from "@/components/element/NumberLevelProgressElement";
+import { BlockOutlined, DesktopOutlined, CommentOutlined } from "@ant-design/icons";
+import { CalendarOutlined, BookOutlined, UserOutlined, CheckSquareOutlined } from "@ant-design/icons"
 const Page = () => {
-    const count = useAppSelector((state) => state.count.value)
-    const dispatch = useAppDispatch()
     return (
         <div className="flex justify-between">
             <div className="w-[790px]">
                 <h5 className="text-super_primary text-xl font-bold h-[80px] leading-[80px]">Dashboard</h5>
                 <h6 className="my-4">Biểu đồ cấp số</h6>
                 <div className="flex justify-around w-[790px] mb-3">
-                    <div className="w-[186px] h-[120px] px-3 py-2 flex flex-col justify-between bg-white rounded-xl">
-                        <div className="flex">
-                            <div className="w-12 h-12 flex justify-center text-center rounded-full bg-[#E8EFFE]">
-                                <CalendarOutlined className="text-2xl text-[#6493F9]" />
-                            </div>
-                            <span className="ml-3 text-sm font-bold leading-[18px]">
-                                Số thứ tự <br /> đã cấp
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h4 className="text-3xl leading-[40px]">4.221</h4>
-                            </div>
-                            <div className="w-12 text-[8px] h-[15px] text-center leading-[15px] text-super_primary rounded-[7px] bg-[#FFEFD9]">
-                                H 32,41%
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-[186px] h-[120px] px-3 py-2 flex flex-col justify-between bg-white rounded-xl">
-                        <div className="flex">
-                            <div className="w-12 h-12 flex justify-center text-center rounded-full bg-[#E8EFFE]">
-                                <CalendarOutlined className="text-2xl text-[#6493F9]" />
-                            </div>
-                            <span className="ml-3 text-sm font-bold leading-[18px]">
-                                Số thứ tự <br /> đã cấp
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h4 className="text-3xl leading-[40px]">4.221</h4>
-                            </div>
-                            <div className="w-12 text-[8px] h-[15px] text-center leading-[15px] text-super_primary rounded-[7px] bg-[#FFEFD9]">
-                                H 32,41%
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-[186px] h-[120px] px-3 py-2 flex flex-col justify-between bg-white rounded-xl">
-                        <div className="flex">
-                            <div className="w-12 h-12 flex justify-center text-center rounded-full bg-[#E8EFFE]">
-                                <CalendarOutlined className="text-2xl text-[#6493F9]" />
-                            </div>
-                            <span className="ml-3 text-sm font-bold leading-[18px]">
-                                Số thứ tự <br /> đã cấp
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h4 className="text-3xl leading-[40px]">4.221</h4>
-                            </div>
-                            <div className="w-12 text-[8px] h-[15px] text-center leading-[15px] text-super_primary rounded-[7px] bg-[#FFEFD9]">
-                                H 32,41%
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-[186px] h-[120px] px-3 py-2 flex flex-col justify-between bg-white rounded-xl">
-                        <div className="flex">
-                            <div className="w-12 h-12 flex justify-center text-center rounded-full bg-[#E8EFFE]">
-                                <CalendarOutlined className="text-2xl text-[#6493F9]" />
-                            </div>
-                            <span className="ml-3 text-sm font-bold leading-[18px]">
-                                Số thứ tự <br /> đã cấp
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h4 className="text-3xl leading-[40px]">4.221</h4>
-                            </div>
-                            <div className="w-12 text-[8px] h-[15px] text-center leading-[15px] text-super_primary rounded-[7px] bg-[#FFEFD9]">
-                                H 32,41%
-                            </div>
-                        </div>
-                    </div>
+                    <DashboardCardElement title="Số thứ tự" titleBr="đã cấp" className_icon="bg-[#E8EFFE]" dataPercent="32,41" data="4.221">
+                        <CalendarOutlined className="text-2xl text-[#6493F9]" />
+                    </DashboardCardElement>
+                    <DashboardCardElement title="Số thứ tự" titleBr="đã sử dụng" className_icon="bg-[#E1F7E6]" dataPercent="32,41" data="3.721">
+                        <CheckSquareOutlined className="text-2xl text-[#35C75A]" />
+                    </DashboardCardElement>
+                    <DashboardCardElement title="Số thứ tự" titleBr="đang chờ" className_icon="bg-[#FFF3E9]" dataPercent="56,41" data="468">
+                        <UserOutlined className="text-2xl text-[#FFAC6A]" />
+                    </DashboardCardElement>
+                    <DashboardCardElement title="Số thứ tự" titleBr="đã bỏ qua" className_icon="bg-[#FEE9E9]" dataPercent="22,41" data="32">
+                        <BookOutlined className="text-2xl text-[#F86D6D]" />
+                    </DashboardCardElement>
                 </div>
                 <div className='flex justify-between bg-white rounded-xl h-[484px]'>
-                    h
+
                 </div>
             </div>
             <div className="bg-white w-[401px] h-[810px] rounded-tl-lg rounded-bl-lg p-6 pt-0">
-                <div className="relative h-[88px] flex  could not find react-redux context value; please ensure the component is wrapped in a <Provider>items-center mb-4">
+                <div className="relative h-[88px] flex items-center">
                     <div className="absolute right-16">
                         <AvatarInfoElement />
                     </div>
                 </div>
-                <h6>Tổng quan</h6>
-                <div>
-                    <div className="w-[353px] h-[83px] flex rounded-xl">
-                        <div>
-                            <div></div>   Đã sử dụng  <h1>{count}</h1>
-                            <button onClick={() => dispatch(counterAction.increment())}>cong</button>
-                            <button onClick={() => dispatch(counterAction.decrement())}>tru</button>
-                        </div>
+                <div className="grid grid-cols-1 gap-4">
+                    <h6>Tổng quan</h6>
+                    <div className="grid grid-cols-1 gap-3">
+                        <DashboardProgressElement progressColor="#FF7506" title="Thiết bị" activePercent={90} nonActivePercent={10} data="4.221" dataActive="3.799" dataNonActive="422" >
+                            <DesktopOutlined />
+                        </DashboardProgressElement>
+                        <DashboardProgressElement progressColor="#4277FF" title="Dịch vụ" activePercent={76} nonActivePercent={10} data="276" dataActive="210" dataNonActive="66" >
+                            <CommentOutlined />
+                        </DashboardProgressElement>
+                        <NumberLevelProgressElement progressColor="#35C75A" title="Cấp số" waitPercent={86} usedPercent={10} skipPercent={5} skipData="32" usedData="486" waitData="3.721" data="4.221">
+                            <BlockOutlined />
+                        </NumberLevelProgressElement>
                     </div>
+                    <CalendarElement />
                 </div>
             </div>
         </div >

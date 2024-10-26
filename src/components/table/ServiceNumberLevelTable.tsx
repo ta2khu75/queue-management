@@ -7,15 +7,15 @@ import { useEffect, useState } from "react";
 import { NumberLevelStatus } from "@/type/NumberLevelStatus";
 import { CaretDownOutlined } from "@ant-design/icons"
 import dayjs from "dayjs"
+import useDebounce from "@/hook/useDebounce";
 type Props = {
     serviceId: string,
 }
 const ServiceNumberLevelTable = ({ serviceId }: Props) => {
-    const setBgStatus = (status: string) => {
-        if (status === NumberLevelStatus.WAITING) return "bg-[#4277FF]";
-        if (status === NumberLevelStatus.USED) return "bg-[#7E7D88]";
-        if (status === NumberLevelStatus.SKIP) return "bg-[#E73F3F]";
-    }
+    const [fromTo, setFromTo] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null] | null>(null);
+    const [keyword, setKeyword] = useState("")
+    const keywordDebounce = useDebounce(keyword)
+    const [status, setStatus] = useState("all")
     const columns: TableProps<NumberLevel>['columns'] = [
         {
             title: 'Số thứ tự',
@@ -30,12 +30,21 @@ const ServiceNumberLevelTable = ({ serviceId }: Props) => {
         },
     ];
     const dateFormat = "DD/MM/YYYY"
-    useEffect(() => {
-    }, [])
     const [numberLevels, setNumberLevels] = useState<NumberLevel[]>()
     useEffect(() => {
-        fetchReadAll()
-    }, [])
+        if (fromTo?.[0] && fromTo?.[1]) {
+            BaseService.query<NumberLevel>(query(collection(db, "number-levels"), where("grant_time", ">=", fromTo[0].toDate()), where("grant_time", "<=", fromTo[1].toDate()), orderBy("grant_time", "desc"))).then(data => {
+                setNumberLevels(data)
+            })
+        } else {
+            fetchReadAll();
+        }
+    }, [fromTo])
+    const setBgStatus = (status: string) => {
+        if (status === NumberLevelStatus.WAITING) return "bg-[#4277FF]";
+        if (status === NumberLevelStatus.USED) return "bg-[#7E7D88]";
+        if (status === NumberLevelStatus.SKIP) return "bg-[#E73F3F]";
+    }
     const fetchReadAll = () => {
         BaseService.query<NumberLevel>(query(collection(db, "number-levels"), where("service_id", "==", serviceId), orderBy("grant_time", "desc"))).then(data => {
             setNumberLevels(data)
@@ -45,25 +54,25 @@ const ServiceNumberLevelTable = ({ serviceId }: Props) => {
         <>
             <Form layout="vertical" className="flex justify-between mb-4">
                 <Form.Item label="Trạng thái">
-                    <Select style={{ width: "160px" }} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" size="large" defaultValue={"Tất cả"} options={[{ label: "Tất cả", value: "all" }, ...Object.entries(NumberLevelStatus).map((status) => ({ label: status[1], value: status[1] }))]}></Select>
+                    <Select style={{ width: "160px" }} onChange={(e) => setStatus(e)} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} value={status} options={[{ label: "Tất cả", value: "all" }, ...Object.entries(NumberLevelStatus).map((status) => ({ label: status[1], value: status[1] }))]}></Select>
                 </Form.Item>
-                <div>
-                    <Form.Item label="Chọn thời gian">
-                        <DatePicker.RangePicker
-                            defaultValue={[dayjs('01/01/2024', dateFormat), dayjs('01/01/2024', dateFormat)]}
-                            format={dateFormat}
-                        />
-                    </Form.Item>
-                </div>
+                <Form.Item label="Chọn thời gian">
+                    <DatePicker.RangePicker
+                        value={fromTo}
+                        onChange={(e) => setFromTo(e)}
+                        format={dateFormat}
+                        className="w-[280px]"
+                    />
+                </Form.Item>
                 <Form.Item label="Từ khoá">
-                    <Input.Search size="large" placeholder="Nhập từ khóa" style={{ width: "206px" }} />
+                    <Input.Search onChange={(e) => setKeyword(e.target.value)} size="large" placeholder="Nhập từ khóa" style={{ width: "206px" }} />
                 </Form.Item>
             </Form >
             <Table<NumberLevel> style={{ width: "1112px" }}
                 bordered
                 pagination={{ pageSize: 9 }}
                 rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
-                className="custom-table" columns={columns} dataSource={numberLevels} />
+                className="custom-table" columns={columns} dataSource={numberLevels?.filter(numberLevel => numberLevel.status === status || status === "all").filter(numberLevel => numberLevel.number_level?.includes(keywordDebounce))} />
         </>
     )
 }

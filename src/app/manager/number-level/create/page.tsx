@@ -84,6 +84,17 @@ const Page = () => {
                     }
                 }
             }
+            if (!number) {
+                if (dataQuery.length > 0) {
+                    const numberNotReset = dataQuery[0].number;
+                    let numberParse = parseInt(numberNotReset);
+                    numberParse++
+                    number = numberParse.toString().padStart(numberNotReset.length, "0")
+                } else {
+                    number = "1"
+                }
+                numberLevel = number
+            }
             if (prefix) {
                 numberLevel = `${prefix}${numberLevel}`
             }
