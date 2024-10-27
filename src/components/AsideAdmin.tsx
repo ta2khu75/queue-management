@@ -76,6 +76,7 @@ export const AsideAdmin = () => {
     };
     const handleLogout = () => {
         dispatch(authAction.reset())
+        localStorage.removeItem("auth")
         router.push('/login')
     }
     return (

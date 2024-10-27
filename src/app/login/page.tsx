@@ -32,6 +32,7 @@ const Page = () => {
     BaseService.query<Account>(query(accountCollenctionRef, where("username", "==", values.username), limit(1))).then((data) => {
       if (data.length > 0 && data[0].password == values.password) {
         dispatch(authAction.set(data[0]))
+        localStorage.setItem("auth", JSON.stringify(data[0]))
         fetchIPAddress()
         router.push("/manager")
       } else {

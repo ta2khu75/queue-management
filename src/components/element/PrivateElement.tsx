@@ -12,12 +12,12 @@ const PrivateElement = ({
     const auth = useAppSelector(state => state.auth);
     const router = useRouter();
     const pathname = usePathname()
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     if (!auth.auth && pathname !== "login" && pathname !== "forgot-password" && pathname !== "reset-password") {
-    //         router.push('/login');
-    //     }
-    // }, [auth.auth, router]);
+        if (!auth.auth && pathname !== "login" && pathname !== "forgot-password" && pathname !== "reset-password") {
+            router.push('/login');
+        }
+    }, [auth.auth, router]);
 
     return (
         <>{children}</>

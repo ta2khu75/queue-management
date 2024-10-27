@@ -10,4 +10,7 @@ interface NumberLevel {
     grant_time?: Date | Timestamp,
     expiry?: Date | Timestamp,
     number: string,
+    fullName?: string,
+    phoneNumber?: string,
+    email?: string
 }
