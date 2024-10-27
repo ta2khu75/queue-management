@@ -6,5 +6,6 @@ interface Device {
     username?: string,
     address_ip?: string,
     password?: string,
-    service_ids?: string[]
+    service_ids?: string[],
+    status?: Status
 }

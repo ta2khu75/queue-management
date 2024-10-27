@@ -44,29 +44,20 @@ const Page = () => {
             console.log(from, to, prefix, surfix, reset ? "true" : "false");
             let numberLevel = ""
             let number = ""
-            let number_reset: NumberLevel | undefined = undefined
             const dataQuery = await BaseService.query<NumberLevel>(query(collectionRef, where("service_id", "==", values.service_id), orderBy("grant_time", "desc"), limit(1)))
             if (reset) {
                 if (dataQuery.length > 0 && dataQuery?.[0]?.grant_time instanceof Timestamp && dayjs(new Date(dataQuery[0].grant_time.toMillis())).format("HH:mm DD/MM/YYYY").includes(dayjs().format("DD/MM/YYYY"))) {
-                    number_reset = dataQuery[0]
+                    let numberParse = parseInt(dataQuery[0].number, 10);
+                    numberParse++
+                    number = numberParse.toString()
+                } else {
+                    number = from ?? "1"
                 }
             }
             if (from && to) {
                 if (reset) {
-                    if (number_reset) {
-                        let numberParse = parseInt(number_reset.number, 10);
-                        numberParse++
-                        console.log("number-parse", numberParse);
-
-                        number = numberParse.toString().padStart(to.length, "0")
-                        if (number == to) {
-                            number = from
-                        }
-                        numberLevel = number
-                    } else {
-                        number = from;
-                        numberLevel = number
-                    }
+                    const numberParse = number.padStart(to.length, "0")
+                    number = numberParse
                 }
                 else {
                     if (dataQuery.length > 0) {
@@ -74,14 +65,11 @@ const Page = () => {
                         let numberParse = parseInt(numberNotReset);
                         numberParse++
                         number = numberParse.toString().padStart(to.length, "0")
-                        if (number == to) {
-                            number = from
-                        }
-                        numberLevel = number
                     } else {
                         number = from
-                        numberLevel = from
                     }
+                } if (number === to) {
+                    number = from
                 }
             }
             if (!number) {
@@ -89,16 +77,20 @@ const Page = () => {
                     const numberNotReset = dataQuery[0].number;
                     let numberParse = parseInt(numberNotReset);
                     numberParse++
-                    number = numberParse.toString().padStart(numberNotReset.length, "0")
+                    number = numberParse.toString();
                 } else {
                     number = "1"
                 }
-                numberLevel = number
             }
+            numberLevel = number
             if (prefix) {
+                console.log(prefix);
+
                 numberLevel = `${prefix}${numberLevel}`
             }
             if (surfix) {
+                console.log(surfix);
+
                 numberLevel = `${numberLevel}${surfix}`
             }
             BaseService.create<NumberLevel>(collectionRef, { account_id: account?.id ?? "", expiry: HashUtil.hour(), status: NumberLevelStatus.WAITING, service_id: service.id, grant_time: new Date(), number_level: numberLevel, number }).then(data => {
@@ -134,9 +126,13 @@ const Page = () => {
         service.number_rules = number_rules;
         return service;
     }
-    const handleSelectChange = (e: string) => {
-        const data = services.find(service => service.id === e);
+    const handleSelectChange = (data: Service) => {
         if (data) {
+            setReset(false)
+            setPrefix(undefined)
+            setSurfix(undefined)
+            setFrom(undefined)
+            setTo(undefined)
             setService(data)
             setNumberRulerService({ ...data })
         }
@@ -150,7 +146,7 @@ const Page = () => {
                 <div className="font-bold text-xl leading-[30px] mb-3 text-[#535261]">Dịch vụ khách hàng lựa chọn</div>
                 <div className="flex justify-center mb-20">
                     <Form.Item<NumberLevel> name={"service_id"} className="w-[400px]">
-                        <Select onChange={(e: string) => handleSelectChange(e)} placeholder="Chọn dịch vụ" options={services.map(service => ({ label: service.service_name, value: service.id }))} suffixIcon={<CaretDownOutlined />} />
+                        <Select onChange={(e: Service) => handleSelectChange(e)} placeholder="Chọn dịch vụ" options={services.map(service => ({ label: service.service_name, value: service }))} suffixIcon={<CaretDownOutlined />} />
                     </Form.Item>
                 </div>
                 <div className="flex justify-center">

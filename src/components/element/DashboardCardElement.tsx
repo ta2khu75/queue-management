@@ -1,10 +1,11 @@
+import { FunctionUtil } from "@/app/util/FunctionUtil"
 import { ArrowUpOutlined } from "@ant-design/icons"
 type Props = {
     children: React.JSX.Element,
     title: string
     titleBr: string
     className_icon: string
-    data: string
+    data: number
     dataPercent: string
 }
 const DashboardCardElement = ({ children, title, titleBr, className_icon, data, dataPercent }: Props) => {
@@ -20,7 +21,7 @@ const DashboardCardElement = ({ children, title, titleBr, className_icon, data, 
             </div>
             <div className="flex justify-between items-center">
                 <div>
-                    <h4 className="text-3xl leading-[40px]">{data}</h4>
+                    <h4 className="text-3xl leading-[40px]">{FunctionUtil.formatNumber(data)}</h4>
                 </div>
                 <div className="w-12 text-[8px] h-[15px] text-center leading-[15px] text-super_primary rounded-[7px] bg-[#FFEFD9]">
                     <ArrowUpOutlined /> {dataPercent}%

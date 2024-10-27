@@ -36,8 +36,9 @@ const DeviceTable = ({ keyword }: Props) => {
         },
         {
             title: 'Dịch vụ sử dụng',
-            key: 'service',
-            dataIndex: 'service',
+            key: 'service_ids',
+            dataIndex: 'service_ids',
+            render: (service_ids: string[]) => <>{service_ids?.map(service_id => `${service_id}, `)}</>
         },
         {
             key: 'details',

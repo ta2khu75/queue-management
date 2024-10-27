@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { deviceAction } from "@/redux/slice/deviceSlice";
 import { serviceAction } from "@/redux/slice/serviceClice";
 import { FetchStatus } from "@/type/FetchStatus";
+import { Status } from "@/type/Status";
 import { Button, Form, FormProps, Input, Select } from "antd"
 import { DefaultOptionType } from "antd/es/select";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,7 +22,7 @@ const Page = () => {
     const [optionServices, setOptionServices] = useState<DefaultOptionType[]>([])
     const onFinish: FormProps<Account>['onFinish'] = (values) => {
         setFetchStatus(FetchStatus.PENDING)
-        dispatch(deviceAction.fetchCreate(values))
+        dispatch(deviceAction.fetchCreate({ ...values, status: Status.ACTIVE }))
     };
     useEffect(() => {
         if (fetchStatus !== FetchStatus.IDLE) {

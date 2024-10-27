@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { serviceAction } from "@/redux/slice/serviceClice";
 import { FetchStatus } from "@/type/FetchStatus";
 import { NumberRule } from "@/type/NumberRule";
+import { Status } from "@/type/Status";
 import { Button, Checkbox, Form, FormProps, Input } from "antd"
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ const Page = () => {
             number_rules[numberIndex] = `${number_rules[numberIndex]} ${surfix}`
         }
         console.log(values);
-        dispatch(serviceAction.fetchCreate(values))
+        dispatch(serviceAction.fetchCreate({ ...values, status: Status.ACTIVE }))
     };
     return (
         <div className="flex flex-col">

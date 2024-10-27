@@ -1,5 +1,4 @@
 import { AsideFragment } from "@/components/AsideFagment";
-import PrivateElement from "@/components/element/PrivateElement";
 import type { Metadata } from "next";
 
 
@@ -15,12 +14,10 @@ export default async function RootLayout({
 }>) {
     return (
         <div className="flex mx-auto" style={{ width: "1440px", height: "810px" }}>
-            <PrivateElement>
-                <AsideFragment />
-                <div className="bg-[#F6F6F6] grow pl-6">
-                    {children}
-                </div>
-            </PrivateElement>
+            <AsideFragment />
+            <div className="bg-[#F6F6F6] grow pl-6">
+                {children}
+            </div>
         </div>
     );
 }
