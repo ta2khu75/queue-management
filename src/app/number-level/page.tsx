@@ -42,6 +42,7 @@ const Page = () => {
     }, [numberLevel])
     const onFinish: FormProps<NumberLevel>['onFinish'] = async (values) => {
         if (service) {
+            setOpenForm(false)
             console.log(from, to, prefix, surfix, reset ? "true" : "false");
             let numberLevel = ""
             let number = ""
@@ -128,7 +129,8 @@ const Page = () => {
         service.number_rules = number_rules;
         return service;
     }
-    const handleSelectChange = (data: Service) => {
+    const handleSelectChange = (id: string) => {
+        const data = services.find(service => service.id === id);
         if (data) {
             setReset(false)
             setPrefix(undefined)
@@ -149,7 +151,7 @@ const Page = () => {
                 <div className="font-bold text-xl leading-[30px] mb-3 text-[#535261]">Dịch vụ khách hàng lựa chọn</div>
                 <div className="flex justify-center mb-20">
                     <Form.Item<NumberLevel> name={"service_id"} className="w-[400px]">
-                        <Select onChange={(e: Service) => handleSelectChange(e)} placeholder="Chọn dịch vụ" options={services.map(service => ({ label: service.service_name, value: service }))} suffixIcon={<CaretDownOutlined />} />
+                        <Select onChange={(e: string) => handleSelectChange(e)} placeholder="Chọn dịch vụ" options={services.map(service => ({ label: service.service_name, value: service.id }))} suffixIcon={<CaretDownOutlined />} />
                     </Form.Item>
                 </div>
                 <div className="flex justify-center">

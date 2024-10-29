@@ -10,6 +10,7 @@ import { FetchStatus } from "@/type/FetchStatus";
 import { roleAction } from "@/redux/slice/roleSlice";
 import { accountAction } from "@/redux/slice/accountSlice";
 import { Status } from "@/type/Status";
+import { Device } from "@/type/Device";
 const Page = () => {
     const dispatch = useAppDispatch()
     const roles = useAppSelector(state => state.role.roles)

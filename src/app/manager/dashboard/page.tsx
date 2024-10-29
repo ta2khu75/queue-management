@@ -13,7 +13,7 @@ import { collection, getCountFromServer, query, where } from "firebase/firestore
 import { useEffect, useState } from "react";
 import dayjs from "dayjs"
 import { CaretDownOutlined } from "@ant-design/icons"
-import { Form, Select } from "antd";
+import { Select } from "antd";
 const Page = () => {
 
     const numberLevelCollectionRef = collection(db, "number-levels")
@@ -91,7 +91,7 @@ const Page = () => {
                         <BookOutlined className="text-2xl text-[#F86D6D]" />
                     </DashboardCardElement>
                 </div>
-                <div className='flex justify-between bg-white rounded-xl h-[484px] p-6'>
+                <div className='bg-white rounded-xl h-[484px] p-6'>
                     <div className="flex justify-between">
                         <div className="grid-cols-1">
                             <div className="font-bold text-xl leading-[30px] mb-1">Bảng thống kê theo tuần</div>
@@ -99,7 +99,7 @@ const Page = () => {
                         </div>
                         <div className="flex items-center">
                             <div className="font-semibold mr-2">Xem theo</div>
-                            <Select style={{ width: "106px", height: "42px" }} size="large" suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} defaultValue={"Tất cả"} options={[{ label: "Tuần", value: "week" }, { label: "Tháng", value: "month" }, { label: "Năm", value: "year" }]}></Select>
+                            <Select style={{ width: "106px", height: "42px" }} size="large" suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} defaultValue={"week"} options={[{ label: "Tuần", value: "week" }, { label: "Tháng", value: "month" }, { label: "Năm", value: "year" }]}></Select>
                         </div>
                     </div>
                 </div>

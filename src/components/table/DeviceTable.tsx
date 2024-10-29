@@ -1,9 +1,13 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { deviceAction } from "@/redux/slice/deviceSlice";
+import { serviceAction } from "@/redux/slice/serviceClice";
+import { ConnectStatus } from "@/type/ConnectStatus";
+import { Device } from "@/type/Device";
 import { FetchStatus } from "@/type/FetchStatus";
+import { Status } from "@/type/Status";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 type Props = {
     keyword: string
 }
@@ -16,6 +20,7 @@ const DeviceTable = ({ keyword }: Props) => {
         },
         {
             title: 'Tên thiết bị',
+            width: 120,
             dataIndex: "device_name",
             key: 'name',
         },
@@ -26,24 +31,30 @@ const DeviceTable = ({ keyword }: Props) => {
         },
         {
             title: 'Trạng thái hoạt động',
-            key: 'status-active',
-            dataIndex: "",
+            key: 'status',
+            dataIndex: "status",
+            render: status => <div className="flex items-center"><div className={`h-2 w-2 rounded-full mr-[6.5px] ${status === Status.ACTIVE ? "bg-active" : "bg-in_active"}`}></div><span>{status === Status.ACTIVE ? "Hoạt động" : "Ngưng hoạt động"}</span></div>
         },
         {
             title: 'Trạng thái kết nối',
-            key: 'status-connect',
-            dataIndex: 'tags',
+            key: 'connect_status',
+            dataIndex: 'connect_status',
+            render: status => <div className="flex items-center"><div className={`h-2 w-2 rounded-full mr-[6.5px] ${status === ConnectStatus.CONNECT ? "bg-active" : "bg-in_active"}`}></div><span>{status === ConnectStatus.CONNECT ? "Kết nối" : "Mất kết nối"}</span></div>
         },
         {
             title: 'Dịch vụ sử dụng',
             key: 'service_ids',
+            width: 200,
             dataIndex: 'service_ids',
-            render: (service_ids: string[]) => <>{service_ids?.map(service_id => `${service_id}, `)}</>
+            render: (service_ids: string[]) => <>
+                <div className="truncate w-[180px]">{service_ids?.map(service_id => `${serviceMap?.get(service_id)?.service_name}, `)}{service_ids?.length > 0 ? "..." : ""}</div>
+                <div><Link href={""} className="underline text-[#4277FF] decoration-1">Xem thêm</Link></div>
+            </>
         },
         {
             key: 'details',
             dataIndex: "id",
-            render: (text) => <Link href={`/manager/device/details/${text}`} className="underline text-[#4277FF] decoration-1" >Chi tiết</Link>
+            render: (text) => <Link href={`/manager/device/details/${text}`} className="underline text-[#4277FF] decoration-1">Chi tiết</Link>
         },
         {
             key: 'update',
@@ -53,11 +64,24 @@ const DeviceTable = ({ keyword }: Props) => {
     ];
     const dispatch = useAppDispatch()
     const deviceState = useAppSelector(state => state.device)
+    const serviceState = useAppSelector(state => state.service)
+    const [serviceMap, setServiceMap] = useState<Map<string, Service>>()
     useEffect(() => {
         if (deviceState.devices.length === 0) {
             dispatch(deviceAction.fetchReadAll())
         }
     }, [])
+    useEffect(() => {
+        if (serviceState.services.length === 0)
+            dispatch(serviceAction.fetchReadAll())
+        else {
+            setServiceMap(serviceState.services.reduce((service, item) => {
+                service.set(item.id, item);
+                return service;
+            }, new Map()))
+
+        }
+    }, [serviceState.services.length])
     if (deviceState.fetchStatus === FetchStatus.PENDING) {
         return <div>loading</div>
     }

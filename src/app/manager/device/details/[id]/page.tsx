@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation'
 import HeaderAdmin from '@/components/HeaderAdmin'
 import { useAppDispatch, useAppSelector } from '@/redux/hook'
 import { serviceAction } from '@/redux/slice/serviceClice'
+import { Device } from '@/type/Device'
 const Page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "devices")
     const deviceState = useAppSelector(state => state.device)

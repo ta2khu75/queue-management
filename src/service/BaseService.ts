@@ -42,13 +42,25 @@ export default class BaseService {
     }
     private static async writeLog(action: string) {
         const account = store.getState().auth.account;
-        const addressIp = store.getState().address.ip
+        const addressIp = await this.fetchIPAddress()
+        console.log(
+            { account_id: account?.id, action, impact_time: new Date(), address_ip: addressIp })
         if (account?.id && addressIp) {
             await addDoc(
                 collection(db, "user-logs")
                 , { account_id: account.id, action, impact_time: new Date(), address_ip: addressIp })
         }
     }
+    private static async fetchIPAddress() {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip
+        } catch (error) {
+            console.error('Error fetching the IP address:', error);
+            throw error;
+        }
+    };
     private static getActionLog(path: string, data: object): string | null {
         if (IsUtil.isType<Service>(data, "service_id")) {
             return `Cập nhật thông tin ${this.switchPath(path)} ${data.service_id}`;

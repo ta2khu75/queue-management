@@ -9,4 +9,5 @@ interface Account {
     role_id?: string;
     status?: string;
     avatar_url?: string;
+    forgot_code?: string;
 }

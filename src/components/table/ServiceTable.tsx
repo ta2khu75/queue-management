@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { serviceAction } from "@/redux/slice/serviceClice";
 import { FetchStatus } from "@/type/FetchStatus";
+import { Status } from "@/type/Status";
 import { Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -28,7 +29,7 @@ const ServiceTable = ({ keyword }: Props) => {
             title: 'Trạng thái hoạt động',
             dataIndex: "status",
             key: 'status',
-            render: status => <div className="flex items-center"><div className={`h-2 w-2 rounded-full mr-[6.5px] ${status === "ACTIVE" ? "bg-active" : "bg-in_active"}`}></div><span>{status === "ACTIVE" ? "Hoạt động" : "Ngưng hoạt động"}</span></div>
+            render: status => <div className="flex items-center"><div className={`h-2 w-2 rounded-full mr-[6.5px] ${status === Status.ACTIVE ? "bg-active" : "bg-in_active"}`}></div><span>{status === Status.ACTIVE ? "Hoạt động" : "Ngưng hoạt động"}</span></div>
         },
         {
             key: 'details',
@@ -53,7 +54,7 @@ const ServiceTable = ({ keyword }: Props) => {
     if (serviceState.fetchStatus === FetchStatus.REJECTED) {
         return <div>something wrong</div>
     }
-    return <Table<Device> style={{ width: "1112px" }}
+    return <Table<Service> style={{ width: "1112px" }}
         bordered
         pagination={{ pageSize: 9 }}
         rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}

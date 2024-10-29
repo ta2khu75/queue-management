@@ -1,3 +1,5 @@
+import { ConnectStatus } from "./ConnectStatus"
+
 interface Device {
     id?: string
     device_id?: string,
@@ -7,5 +9,6 @@ interface Device {
     address_ip?: string,
     password?: string,
     service_ids?: string[],
-    status?: Status
+    status?: Status,
+    connect_status?: ConnectStatus,
 }

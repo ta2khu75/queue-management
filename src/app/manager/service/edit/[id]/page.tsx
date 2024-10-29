@@ -114,7 +114,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                             <Form.Item<Service>
                                 label="Tên dịch vụ:"
                                 name={"service_name"}
-                                rules={[{ required: true, message: 'Vui lòng nhập loại thiết bị' }]}
+                                rules={[{ required: true, message: 'Vui lòng nhập tên dịch vụ' }]}
                             >
                                 <Input size="large" placeholder="Khám tim mạch" />
                             </Form.Item>

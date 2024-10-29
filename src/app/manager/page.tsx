@@ -5,15 +5,18 @@ import { Form, Input } from "antd"
 import Image from "next/image"
 import { CameraOutlined } from "@ant-design/icons"
 import { useAppDispatch, useAppSelector } from "@/redux/hook"
-import { ChangeEvent } from "react"
+import { ChangeEvent, useEffect } from "react"
 import { ref } from "firebase/storage"
 import { db, storage } from "@/config/FirebaseConfig"
 import { v4 as uuidv4 } from 'uuid';
 import BaseService from "@/service/BaseService"
 import { collection } from "firebase/firestore"
 import { authAction } from "@/redux/slice/authSlice"
+import { roleAction } from "@/redux/slice/roleSlice"
 const Page = () => {
     const auth = useAppSelector(state => state.auth)
+    const roleState = useAppSelector(state => state.role)
+    const [form] = Form.useForm<Account>()
     const dispatch = useAppDispatch()
     const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
         const image = e?.target?.files?.[0];
@@ -31,6 +34,16 @@ const Page = () => {
             })
         }
     }
+    useEffect(() => {
+        if (roleState.roles.length === 0) {
+            dispatch(roleAction.fetchReadAll())
+            form.setFieldsValue({ ...auth.account })
+        } else {
+            const roleId = auth.account?.role_id
+            const role = roleState.roles.find(r => r.id === roleId)
+            form.setFieldsValue({ ...auth.account, role_id: role?.role_name })
+        }
+    }, [roleState.roles.length])
     return (
         <div>
             <header className="flex justify-between items-center" style={{ height: "88px" }} >
@@ -52,7 +65,7 @@ const Page = () => {
                         <div className="text-center leading-9 text-2xl font-bold mt-4">{auth.account?.full_name}</div>
                     </div>
                     <div style={{ width: "792px", height: "276px" }} className="ml-5">
-                        <Form layout="vertical" initialValues={auth.account} className="grid grid-cols-2 gap-5 disable">
+                        <Form layout="vertical" form={form} className="grid grid-cols-2 gap-5 disable">
                             <Form.Item<Account>
                                 label="Tên người dùng"
                                 name="full_name"
@@ -83,9 +96,9 @@ const Page = () => {
                             >
                                 <Input disabled />
                             </Form.Item>
-                            <Form.Item
+                            <Form.Item<Account>
                                 label="Vai trò:"
-                                name="role"
+                                name="role_id"
                             >
                                 <Input disabled />
                             </Form.Item>

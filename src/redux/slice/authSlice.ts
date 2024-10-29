@@ -15,6 +15,7 @@ const authSlice = createSlice({
         set(state, action: PayloadAction<Account>) {
             state.auth = true
             state.account = action.payload
+            localStorage.setItem('auth', JSON.stringify(state))
         },
         reset(state) {
             state.auth = false

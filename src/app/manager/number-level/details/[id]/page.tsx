@@ -43,7 +43,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                     <div className='grid grid-cols-2'>
                         <div className='grid grid-cols-4 mb-4'>
                             <div className='text-base font-semibold'>Họ tên:</div>
-                            <span className='text-base col-span-3 font-normal text-[#535261]'>{account?.full_name}</span>
+                            <span className='text-base col-span-3 font-normal text-[#535261]'>{account?.full_name ?? numberLevel?.fullName}</span>
                         </div>
                         <div className='grid grid-cols-4 mb-4'>
                             <span className='text-base font-semibold'>Nguồn cấp:</span>
@@ -63,7 +63,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                         </div>
                         <div className='grid grid-cols-4'>
                             <span className='text-base font-semibold'>Số điện thoại:</span>
-                            <span className='text-base col-span-3 font-normal text-[#535261]'>{account?.phone_number}</span>
+                            <span className='text-base col-span-3 font-normal text-[#535261]'>{account?.phone_number ?? numberLevel?.phoneNumber}</span>
                         </div>
                         <div className='grid grid-cols-4 mb-4'>
                             <span className='text-base font-semibold'>Thời gian cấp:</span>
@@ -74,7 +74,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                         </div>
                         <div className='grid grid-cols-4'>
                             <span className='text-base font-semibold'>Địa chỉ Email:</span>
-                            <span className='text-base col-span-3 font-normal text-[#535261]'>{account?.email}</span>
+                            <span className='text-base col-span-3 font-normal text-[#535261]'>{account?.email ?? numberLevel?.email}</span>
                         </div>
                         <div className='grid grid-cols-4'>
                             <span className='text-base font-semibold'>Hạn sử dụng:</span>
