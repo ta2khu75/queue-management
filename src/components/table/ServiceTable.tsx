@@ -6,9 +6,10 @@ import { Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect } from "react";
 type Props = {
-    keyword: string
+    keyword: string,
+    status: string
 }
-const ServiceTable = ({ keyword }: Props) => {
+const ServiceTable = ({ keyword, status }: Props) => {
     const columns: TableProps<Service>['columns'] = [
         {
             title: 'Mã dịch vụ',
@@ -58,7 +59,7 @@ const ServiceTable = ({ keyword }: Props) => {
         bordered
         pagination={{ pageSize: 9 }}
         rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
-        className="custom-table" columns={columns} dataSource={serviceState.services.filter(service => service.service_name?.includes(keyword))} />
+        className="custom-table" columns={columns} dataSource={serviceState.services.filter(service => service.service_name?.includes(keyword)).filter(service => status === "all" || status === service.status)} />
 }
 
 export default ServiceTable;

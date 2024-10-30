@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { authAction } from "@/redux/slice/authSlice";
 import { useAppDispatch } from "@/redux/hook";
+import path from "path";
 export const AsideAdmin = () => {
     type MenuItem = Required<MenuProps>['items'][number];
     const pathname = usePathname();
@@ -25,7 +26,15 @@ export const AsideAdmin = () => {
         } else if (pathname.includes('/report')) {
             setSelectedKey('sub5');
         } else if (pathname.includes('/setting')) {
-            setSelectedKey('sub6');
+            let sub = "sub6-"
+            if (pathname.includes("/role")) {
+                sub += "1"
+            } else if (pathname.includes("/account")) {
+                sub += "2"
+            } else if (pathname.includes("/user-log")) {
+                sub += "3"
+            }
+            setSelectedKey(sub)
         }
     }, [pathname]);
     const items: MenuItem[] = [
@@ -61,12 +70,12 @@ export const AsideAdmin = () => {
         },
         {
             key: 'sub6',
-            label: <>Cài đặt hệ thống<MoreOutlined /></>,
+            label: <>Cài đặt hệ thống <MoreOutlined /></>,
             icon: <SettingOutlined />,
             children: [
-                { key: '9', label: <span className="text-[#7E7D88]">Quản lý vai trò</span>, onClick: () => router.push("/manager/setting/role") },
-                { key: '10', label: <span className="text-[#7E7D88]">Quản lý tài khoản</span>, onClick: () => router.push("/manager/setting/account") },
-                { key: '11', label: <span className="text-[#7E7D88]">Nhật ký người dùng</span>, onClick: () => router.push("/manager/setting/user-log") },
+                { key: 'sub6-1', label: "Quản lý vai trò", onClick: () => router.push("/manager/setting/role") },
+                { key: 'sub6-2', label: "Quản lý tài khoản", onClick: () => router.push("/manager/setting/account") },
+                { key: 'sub6-3', label: "Nhật ký người dùng", onClick: () => router.push("/manager/setting/user-log") },
             ],
         },
     ];

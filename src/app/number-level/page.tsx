@@ -4,7 +4,6 @@ import { Button, Form, FormProps, Input, Modal, Select } from "antd"
 import { CaretDownOutlined } from "@ant-design/icons"
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import ModalElement from "@/components/element/ModalElement";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { serviceAction } from "@/redux/slice/serviceClice";
 import { NumberLevel } from "@/type/NumberLevel";
@@ -186,29 +185,25 @@ const Page = () => {
                     </div>
                 </Form>
             </Modal>
-            {
-                numberLevel &&
-                <ModalElement open={open} handleCancel={() => setOpen(false)}>
-                    <div className={`w-[469px] h-[385px] rounded-3xl bg-white relative`}>
-                        <div className="absolute top-[22px] right-[22px]">
-                            <button className="text-primary font-bold">X</button>
-                        </div>
-                        <div className="flex flex-col items-center mt-12">
-                            <h4 className="font-bold text-[32px] leading-[48px] mb-6">Số thứ tự được cấp</h4>
-                            <h3 className="text-super_primary text-[56px] leading-[60px] font-extrabold mb-6">{numberLevel.number_level}</h3>
-                            <p className="text-[18px] leading-[27px] mb-[44px]">DV: {service?.service_name} <b>(tại quầy số 1)</b></p>
-                        </div>
-                        <div className="bg-primary h-[110px] rounded-b-3xl flex flex-col items-center justify-center">
-                            {numberLevel.grant_time && numberLevel.grant_time instanceof Timestamp &&
-                                < div className="text-[22px] font-bold leading-[33px] text-white mb-3"><span className="w-[143px] h-[33px] mr-2">Thời gian cấp:</span><span>{dayjs(new Date(numberLevel.grant_time.toMillis())).format("HH:mm DD/MM/YYYY")}</span></div>
-                            }{
-                                numberLevel.expiry && numberLevel.expiry instanceof Timestamp &&
-                                <div className="text-[22px] font-bold leading-[33px] text-white"><span className="w-[143px] h-[33px] mr-2">Hạn sử dụng:</span><span>{dayjs(new Date(numberLevel.expiry.toMillis())).format("HH:mm DD/MM/YYYY")}</span></div>
-                            }
-                        </div>
+            {numberLevel && <Modal styles={{ content: { padding: "0px", width: "469px", borderRadius: "24px" } }} open={open} footer={[]} onCancel={() => setOpen(false)}>
+                <div className="bg-white w-[469px] h-[385px] rounded-3xl">
+                    <div className="h-[48px]">
                     </div>
-                </ModalElement>
-            }
+                    <div className="flex flex-col items-center">
+                        <h4 className="font-bold text-[32px] leading-[48px] mb-6">Số thứ tự được cấp</h4>
+                        <h3 className="text-super_primary text-[56px] leading-[60px] font-extrabold mb-6">{numberLevel.number_level}</h3>
+                        <p className="text-[18px] leading-[27px] mb-[44px]">DV: {service?.service_name} <b>(tại quầy số 1)</b></p>
+                    </div>
+                    <div className="bg-primary h-[110px] rounded-b-3xl flex flex-col items-center justify-center">
+                        {numberLevel.grant_time && numberLevel.grant_time instanceof Timestamp &&
+                            < div className="text-[22px] font-bold leading-[33px] text-white mb-3"><span className="w-[143px] h-[33px] mr-2">Thời gian cấp:</span><span>{dayjs(new Date(numberLevel.grant_time.toMillis())).format("HH:mm DD/MM/YYYY")}</span></div>
+                        }{
+                            numberLevel.expiry && numberLevel.expiry instanceof Timestamp &&
+                            <div className="text-[22px] font-bold leading-[33px] text-white"><span className="w-[143px] h-[33px] mr-2">Hạn sử dụng:</span><span>{dayjs(new Date(numberLevel.expiry.toMillis())).format("HH:mm DD/MM/YYYY")}</span></div>
+                        }
+                    </div>
+                </div>
+            </Modal>}
         </div >
     )
 }

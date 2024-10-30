@@ -18,9 +18,43 @@
 
 .custom-menu .ant-menu-item:hover {
     background-color: #FFF2E7 !important;
-    /* Change the background color */
     color: #FF7506 !important;
-    /* Change the text color */
+}
+
+.ant-menu-item {
+    color: #7E7D88 !important;
+    font-weight: 600;
+}
+
+.ant-menu-item:hover {
+    background-color: #FFF2E7 !important;
+    color: #FF7506 !important;
+}
+
+.ant-menu-item-selected {
+    color: #FFFFFF !important;
+    background-color: #FF7506 !important;
+}
+
+.custom-menu .ant-menu-submenu:hover {
+    background-color: #FFF2E7 !important;
+    color: #FF7506 !important;
+}
+
+.custom-menu .ant-menu-submenu {
+    color: #7E7D88 !important;
+    font-weight: 500 !important;
+}
+
+.custom-menu .ant-menu-submenu-title {
+    color: #333;
+    /* Màu mặc định */
+}
+
+.custom-menu .ant-menu-submenu-title.active {
+    color: #ffff !important;
+    background-color: #000;
+    /* Change color when a child is selected */
 }
 
 .ant-select-focused .ant-select-selector {

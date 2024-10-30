@@ -32,7 +32,7 @@ const NumberLevelTable = ({ keyword, serviceId, status, fromTo }: Props) => {
             title: 'Tên khách hàng',
             dataIndex: "account_id",
             key: 'account_id',
-            render: (account_id: string) => <>{accountMap?.get(account_id)?.full_name}</>
+            render: (account_id: string | undefined, record: NumberLevel) => <>{account_id ? accountMap?.get(account_id)?.full_name : record.fullName ?? ""}</>
         },
         {
             title: 'Tên dịch vụ',

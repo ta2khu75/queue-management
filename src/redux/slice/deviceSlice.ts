@@ -1,5 +1,6 @@
 import { db } from '@/config/FirebaseConfig'
 import BaseService from '@/service/BaseService'
+import { Device } from '@/type/Device'
 import { FetchStatus } from '@/type/FetchStatus'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'

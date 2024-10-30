@@ -70,7 +70,7 @@ const ServiceNumberLevelTable = ({ serviceId }: Props) => {
             </Form >
             <Table<NumberLevel> style={{ width: "1112px" }}
                 bordered
-                pagination={{ pageSize: 9 }}
+                pagination={{ pageSize: 8}}
                 rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
                 className="custom-table" columns={columns} dataSource={numberLevels?.filter(numberLevel => numberLevel.status === status || status === "all").filter(numberLevel => numberLevel.number_level?.includes(keywordDebounce))} />
         </>

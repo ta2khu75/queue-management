@@ -77,7 +77,7 @@ const AccountTable = ({ keyword, roleId }: Props) => {
     return (
 
         <div className="h-[546px] w-[1112px]">
-            <Table<Device>
+            <Table<Account>
                 bordered
                 pagination={{ pageSize: 9 }}
                 rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}

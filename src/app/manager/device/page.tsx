@@ -7,12 +7,15 @@ import HeaderAdmin from "@/components/HeaderAdmin"
 import { useState } from "react"
 import useDebounce from "@/hook/useDebounce"
 const Page = () => {
-    const optionActive = ["Tất cả", "Hoạt động", "Ngưng hoạt động"];
-    const optionConnect = ["Tất cả", "Kết nối", "Mất kết nối"]
+    const optionActive = ["Hoạt động", "Ngưng hoạt động"];
+    const optionConnect = ["Kết nối", "Mất kết nối"]
     const router = useRouter();
     const pathname = usePathname()
     const [keyword, setKeyword] = useState("")
     const keywordDebounce = useDebounce(keyword)
+    const [status, setStatus] = useState("all")
+    const [statusConnect, setStatusConnect] = useState("all")
+
     return (
         <div className="flex flex-col">
             <HeaderAdmin paths={[{ title: "Thiết bị", path: "" }, { title: "Danh sách thiết bị", path: pathname }]} />
@@ -20,10 +23,10 @@ const Page = () => {
             <Form layout="vertical" className="flex justify-between mb-4 w-[1112px]">
                 <div className="flex">
                     <Form.Item label="Trạng thái hoạt động" className="mb-0">
-                        <Select style={{ width: "300px" }} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" size="large" defaultValue={"Tất cả"} options={optionActive.map((active) => ({ label: active, value: active }))}></Select>
+                        <Select style={{ width: "300px" }} onChange={data => setStatus(data)} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} value={status} className="mr-6" size="large" options={[{ label: "Tất cả", value: "all" }, ...optionActive.map((active) => ({ label: active, value: active }))]}></Select>
                     </Form.Item>
                     <Form.Item label="Trạng thái kết nối" className="mb-0 ">
-                        <Select style={{ width: "300px" }} size="large" suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} defaultValue={"Tất cả"} options={optionConnect.map(connect => ({ label: connect, value: connect }))}></Select>
+                        <Select style={{ width: "300px" }} onChange={data => setStatusConnect(data)} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} value={statusConnect} options={[{ label: "Tất cả", value: "all" }, ...optionConnect.map(connect => ({ label: connect, value: connect }))]}></Select>
                     </Form.Item>
                 </div>
                 <Form.Item label="Từ khoá" className="col-start-5 col-span-1 mb-0">
@@ -31,7 +34,7 @@ const Page = () => {
                 </Form.Item>
             </Form>
             <div className='flex justify-between'>
-                <DeviceTable keyword={keywordDebounce} />
+                <DeviceTable keyword={keywordDebounce} status={status} connectStatus={statusConnect} />
                 <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/device/add')}>
                     <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><PlusOutlined /></div>
                     <div className='text-primary'>Thêm <br /> thiết bị</div>

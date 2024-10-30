@@ -8,10 +8,11 @@ import ServiceTable from "@/components/table/ServiceTable"
 import { useState } from "react"
 import useDebounce from "@/hook/useDebounce"
 const Page = () => {
-    const optionActive = ["Tất cả", "Hoạt động", "Ngưng hoạt động"];
+    const optionActive = ["Hoạt động", "Ngưng hoạt động"];
     const router = useRouter();
     const pathname = usePathname()
     const dateFormat = 'DD/MM/YYYY';
+    const [status, setStatus] = useState("all");
     const [keyword, setKeyword] = useState('')
     const keywordDebounce = useDebounce(keyword)
     return (
@@ -21,11 +22,12 @@ const Page = () => {
             <Form layout="vertical" className="flex justify-between mb-4 w-[1112px]">
                 <div className="flex">
                     <Form.Item label="Trạng thái hoạt động" className="mb-0">
-                        <Select style={{ width: "300px" }} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" size="large" defaultValue={"Tất cả"} options={optionActive.map((active) => ({ label: active, value: active }))}></Select>
+                        <Select style={{ width: "300px" }} onChange={(data) => setStatus(data)} suffixIcon={<CaretDownOutlined className="text-primary text-lg" />} className="mr-6" value={status} options={[{ label: "Tất cả", value: "all" }, ...optionActive.map((active) => ({ label: active, value: active }))]}></Select>
                     </Form.Item>
                     <Form.Item label="Chọn thời gian" className="mb-0 ">
                         <div className="exam-date-picker">
                             <DatePicker.RangePicker
+                                className="w-[300px]"
                                 defaultValue={[dayjs(), dayjs()]}
                                 format={dateFormat}
                             />
@@ -37,7 +39,7 @@ const Page = () => {
                 </Form.Item>
             </Form>
             <div className='flex justify-between'>
-                <ServiceTable keyword={keywordDebounce} />
+                <ServiceTable keyword={keywordDebounce} status={status} />
                 <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/service/add')}>
                     <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><PlusOutlined /></div>
                     <div className='text-primary'>Thêm <br />dịch vụ</div>

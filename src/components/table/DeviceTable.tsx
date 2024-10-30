@@ -9,9 +9,11 @@ import { Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 type Props = {
-    keyword: string
+    keyword: string,
+    status: string,
+    connectStatus: string
 }
-const DeviceTable = ({ keyword }: Props) => {
+const DeviceTable = ({ keyword, status, connectStatus }: Props) => {
     const columns: TableProps<Device>['columns'] = [
         {
             title: 'Mã thiết bị',
@@ -92,7 +94,7 @@ const DeviceTable = ({ keyword }: Props) => {
         bordered
         pagination={{ pageSize: 9 }}
         rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
-        className="custom-table" columns={columns} dataSource={deviceState.devices.filter(device => device.device_name?.includes(keyword))} />
+        className="custom-table" columns={columns} dataSource={deviceState.devices.filter(device => device.device_name?.includes(keyword)).filter(device => status === "all" || device.status === status).filter(device => connectStatus === "all" || device.connect_status === connectStatus)} />
 }
 
 export default DeviceTable

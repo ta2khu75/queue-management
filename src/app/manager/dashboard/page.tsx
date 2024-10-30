@@ -106,7 +106,7 @@ const Page = () => {
             </div>
             <div className="bg-white w-[401px] h-[810px] rounded-tl-lg rounded-bl-lg p-6 pt-0">
                 <div className="relative h-[88px] flex items-center">
-                    <div className="absolute right-16">
+                    <div className="absolute right-4">
                         <AvatarInfoElement />
                     </div>
                 </div>

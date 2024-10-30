@@ -17,7 +17,7 @@ const PrivateElement = ({
         if (!auth.auth && pathname !== "login" && pathname !== "forgot-password" && pathname !== "reset-password") {
             router.push('/login');
         }
-    }, [auth.auth, router]);
+    }, [auth.auth,pathname, router]);
 
     return (
         <>{children}</>

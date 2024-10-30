@@ -19,6 +19,7 @@ const Page = () => {
                 <Form.Item label="Chọn thời gian" className="mb-0 ">
                     <div className="exam-date-picker">
                         <DatePicker.RangePicker
+                            className="w-[300px]"
                             onChange={(e) => setFromTo(e)}
                             value={fromTo}
                             format={dateFormat}
