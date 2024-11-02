@@ -7,16 +7,14 @@ import NumberLevelProgressElement from "@/components/element/NumberLevelProgress
 import { db } from "@/config/FirebaseConfig";
 import { NumberLevelStatus } from "@/type/NumberLevelStatus";
 import { Status } from "@/type/Status";
-import { collection, getCountFromServer, orderBy, query, Timestamp, where } from "firebase/firestore";
+import { collection, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs"
-import { CaretDownOutlined } from "@ant-design/icons"
-import { Select } from "antd";
-import { AreaChart, Area, ResponsiveContainer, YAxis, XAxis, Tooltip } from "recharts"
 import { NumberLevel } from "@/type/NumberLevel";
 import BaseService from "@/service/BaseService";
 import isoWeek from 'dayjs/plugin/isoWeek';
 import DashboardElement from "@/components/element/DashboardElement";
+import { Device } from "@/type/Device";
 dayjs.extend(isoWeek);
 const Page = () => {
     const [numberLevels, setNumberLevels] = useState<NumberLevel[]>([])
@@ -37,36 +35,32 @@ const Page = () => {
     const [serviceCountActive, setServiceCountActive] = useState(0)
     const [serviceCountInActive, setServiceCountInActive] = useState(0)
     useEffect(() => {
-        //devices
-        getCountFromServer(deviceCollectionRef).then(response => {
-            setDeviceCount(response.data().count)
-        })
-        getCountFromServer(query(deviceCollectionRef, where("status", "==", Status.ACTIVE))).then(response => {
-            setDeviceCountActive(response.data().count)
-        })
-        getCountFromServer(query(deviceCollectionRef, where("status", "==", Status.INACTIVE))).then(response => {
-            setDeviceCountInActive(response.data().count)
-        })
-        //services
-        getCountFromServer(serviceCollectionRef).then(response => {
-            setServiceCount(response.data().count)
-        })
-        getCountFromServer(query(serviceCollectionRef, where("status", "==", Status.ACTIVE))).then(response => {
-            setServiceCountActive(response.data().count)
-        })
-        getCountFromServer(query(serviceCollectionRef, where("status", "==", Status.INACTIVE))).then(response => {
-            setServiceCountInActive(response.data().count)
-        })
-        fetchReadAll()
+        fetchReadAllDevice()
+        fetchReadAllService()
+        fetchReadAllNumberLevel()
     }, [])
 
-    const fetchReadAll = () => {
-        BaseService.query<NumberLevel>(query(collection(db, "number-levels"), orderBy("grant_time", "desc"))).then(data => {
+    const fetchReadAllNumberLevel = () => {
+        BaseService.query<NumberLevel>(query(numberLevelCollectionRef, orderBy("grant_time", "desc"))).then(data => {
             setNumberLevels(data)
             setNumberLevelCount(data.length)
             setNumberLevelCountSkip(data.filter(item => item.status ? item.status === NumberLevelStatus.SKIP : false).length)
             setNumberLevelCountWait(data.filter(item => item.status ? item.status === NumberLevelStatus.WAITING : false).length)
-            setNumberLevelCountSkip(data.filter(item => item.status ? item.status === NumberLevelStatus.SKIP : false).length)
+            setNumberLevelCountUsed(data.filter(item => item.status ? item.status === NumberLevelStatus.SKIP : false).length)
+        })
+    }
+    const fetchReadAllService = () => {
+        BaseService.readAll<Service>(serviceCollectionRef).then(data => {
+            setServiceCount(data.length)
+            setServiceCountActive(data.filter(item => item.status ? item.status === Status.ACTIVE : false).length)
+            setServiceCountInActive(data.filter(item => item.status ? item.status === Status.INACTIVE : false).length)
+        })
+    }
+    const fetchReadAllDevice = () => {
+        BaseService.readAll<Device>(deviceCollectionRef).then(data => {
+            setDeviceCount(data.length)
+            setDeviceCountActive(data.filter(item => item.status ? item.status === Status.ACTIVE : false).length)
+            setDeviceCountInActive(data.filter(item => item.status ? item.status === Status.INACTIVE : false).length)
         })
     }
     return (

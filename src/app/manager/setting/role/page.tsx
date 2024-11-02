@@ -25,7 +25,7 @@ const Page = () => {
             <div className='flex justify-between'>
                 <RoleTable keyword={debounceKeyword} />
                 <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/setting/role/add')}>
-                    <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fadd.svg?alt=media&token=30041c15-ff4c-4c95-b7a9-c6abf7aee19f"} width={28} height={28} alt="add" />
+                    <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fadd.svg?alt=media&token=30041c15-ff4c-4c95-b7a9-c6abf7aee19f"} width={24} height={24} alt="add" />
                     <div className='text-primary'>Thêm <br />vai trò</div>
                 </Button>
             </div>

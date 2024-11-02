@@ -3,7 +3,7 @@ import { Select } from "antd"
 import dayjs from "dayjs"
 import { Timestamp } from "firebase/firestore"
 import { useEffect, useState } from "react"
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts"
 import { CaretDownOutlined } from "@ant-design/icons"
 type Props = {
     numberLevels: NumberLevel[],
@@ -128,10 +128,17 @@ const DashboardElement = ({ numberLevels }: Props) => {
             <div className="w-[754px] h-[373px]">
                 <ResponsiveContainer width={"100%"} height={"100%"}>
                     <AreaChart data={dashboardData}>
+                        <defs>
+                            <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#5185F7" stopOpacity={0.8} /> {/* Top color */}
+                                <stop offset="100%" stopColor="#ffffff" stopOpacity={0.3} /> {/* Bottom color */}
+                            </linearGradient>
+                        </defs>
+                        <CartesianGrid vertical={false} />
                         <YAxis />
                         <XAxis dataKey={"name"} interval={calculatorInterval()} />
                         <Tooltip />
-                        <Area type={"monotone"} dataKey={"total"} />
+                        <Area type={"monotone"} fill="url(#colorGradient)" dataKey={"total"} />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>

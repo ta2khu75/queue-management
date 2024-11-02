@@ -1,7 +1,6 @@
 "use client"
 import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { EditFilled, RollbackOutlined } from "@ant-design/icons"
 import BaseService from '@/service/BaseService'
 import { collection } from 'firebase/firestore'
 import { db } from '@/config/FirebaseConfig'
@@ -12,6 +11,7 @@ import { NumberRule } from '@/type/NumberRule'
 import { useAppSelector } from '@/redux/hook'
 import InputServiceElement from '@/components/element/InputServiceElement'
 import ServiceNumberLevelTable from '@/components/table/ServiceNumberLevelTable'
+import Image from 'next/image'
 const Page = ({ params }: { params: { id: string } }) => {
     const serviceCollectionRef = collection(db, "services")
     const serviceState = useAppSelector(state => state.service)
@@ -120,12 +120,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                     <ServiceNumberLevelTable serviceId={params.id} />
                 </div>
                 <div className='grid-cols-1 gap-1'>
-                    <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push(`/manager/service/edit/${params.id}`)}>
-                        <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><EditFilled /></div>
+                    <Button type="text" className="w-20 h-[94px]  flex flex-col font-semibold" onClick={() => router.push(`/manager/service/edit/${params.id}`)}>
+                        <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fedit.svg?alt=media&token=e1a360d6-aa5d-425c-9763-a2d2eaa22f60"} width={24} height={24} alt='edit' />
                         <div className='text-primary'>Cập nhập <br /> danh sách</div>
                     </Button>
-                    <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push(`/manager/service`)}>
-                        <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><RollbackOutlined /></div>
+                    <Button type="text" className="w-20 h-[75px] flex flex-col font-semibold" onClick={() => router.push(`/manager/service`)}>
+                        <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fback.svg?alt=media&token=c490af9d-4e18-454b-9686-9f88a0e6174b"} width={24} height={24} alt='back' />
                         <div className='text-primary'>Quay lại</div>
                     </Button>
                 </div>

@@ -22,7 +22,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const pathname = usePathname()
   const [form] = Form.useForm()
   const { contextHolder, openNotification } = useNotification();
-  const onFinish: FormProps<Device>['onFinish'] = (values) => {
+  const onFinish: FormProps<Account>['onFinish'] = (values) => {
     setFetchStatus(FetchStatus.PENDING)
     dispatch(accountAction.fetchUpdate({ id: params.id, account: values }))
   };

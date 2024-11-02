@@ -13,6 +13,7 @@ import HeaderAdmin from "@/components/HeaderAdmin"
 import { serviceAction } from "@/redux/slice/serviceClice"
 import { DefaultOptionType } from "antd/es/select"
 import { deviceAction } from "@/redux/slice/deviceSlice"
+import { Device } from "@/type/Device"
 
 const Page = ({ params }: { params: { id: string } }) => {
     const [form] = Form.useForm<Device>()
@@ -135,7 +136,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                     </div>
                 </div>
                 <div className="flex justify-center items-center mt-6">
-                    <Button className="h-12 mr-4" onClick={() => router.push("/manager/device/list")} style={{ width: "115px" }}>Hủy bỏ</Button>
+                    <Button className="h-12 mr-4" onClick={() => router.push("/manager/device")} style={{ width: "115px" }}>Hủy bỏ</Button>
                     <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "115px" }}>Cập nhật</Button>
                 </div>
             </Form>

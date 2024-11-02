@@ -1,1 +1,17 @@
- 
+ name: Scheduled API Call
+
+# Thiết lập thời gian chạy định kỳ
+on:
+  schedule:
+    - cron: '30 10 * * *' # Thời gian chạy theo múi giờ UTC (10:30 UTC mỗi ngày)
+
+jobs:
+  call-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call API Endpoint
+        env:
+          API_URL: "http://localhost:3000/api/run-task" # Thay bằng URL của API
+        run: |
+          curl -X GET "$API_URL"

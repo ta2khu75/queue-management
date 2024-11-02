@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import { NumberLevelStatus } from "@/type/NumberLevelStatus";
 import * as XLSX from 'xlsx/xlsx.mjs';
-import { CloudDownloadOutlined } from "@ant-design/icons"
 import Image from "next/image";
 type Props = {
     fromTo: [dayjs.Dayjs | null, dayjs.Dayjs | null] | null
@@ -115,7 +114,7 @@ const ReportTable = ({ fromTo }: Props) => {
                 rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
                 className="custom-table" columns={columns} dataSource={numberLevels} />
             <Button type="text" className="w-20 h-[75px]  flex flex-col font-semibold" onClick={() => handleDownloadClick()}>
-                <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdownload.svg?alt=media&token=04c988db-60cf-4eef-8126-34b5ee61aa8b"} width={28} height={28} alt="add" />
+                <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdownload.svg?alt=media&token=04c988db-60cf-4eef-8126-34b5ee61aa8b"} width={24} height={24} alt="download" />
                 <div className='text-primary'>Tải về</div>
             </Button>
         </div >

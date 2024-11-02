@@ -1,7 +1,6 @@
 "use client"
 import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { EditFilled } from "@ant-design/icons"
 import BaseService from '@/service/BaseService'
 import { collection } from 'firebase/firestore'
 import { db } from '@/config/FirebaseConfig'
@@ -11,6 +10,7 @@ import HeaderAdmin from '@/components/HeaderAdmin'
 import { useAppDispatch, useAppSelector } from '@/redux/hook'
 import { serviceAction } from '@/redux/slice/serviceClice'
 import { Device } from '@/type/Device'
+import Image from 'next/image'
 const Page = ({ params }: { params: { id: string } }) => {
     const deviceCollectionRef = collection(db, "devices")
     const deviceState = useAppSelector(state => state.device)
@@ -81,7 +81,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                         </div>
                     </div>
                     <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push(`/manager/device/edit/${params.id}`)}>
-                        <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><EditFilled /></div>
+                        <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fedit.svg?alt=media&token=e1a360d6-aa5d-425c-9763-a2d2eaa22f60"} width={24} height={24} alt='edit' />
                         <div className='text-primary'>Cập nhập <br /> thiết bị</div>
                     </Button>
                 </div>

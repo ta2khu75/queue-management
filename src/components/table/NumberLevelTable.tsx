@@ -14,9 +14,10 @@ type Props = {
     keyword: string,
     serviceId: string,
     status: string,
+    supply: string
     fromTo: [dayjs.Dayjs | null, dayjs.Dayjs | null] | null
 }
-const NumberLevelTable = ({ keyword, serviceId, status, fromTo }: Props) => {
+const NumberLevelTable = ({ keyword, serviceId, status, supply, fromTo }: Props) => {
     const setBgStatus = (status: string) => {
         if (status === NumberLevelStatus.WAITING) return "bg-[#4277FF]";
         if (status === NumberLevelStatus.USED) return "bg-[#7E7D88]";
@@ -114,7 +115,12 @@ const NumberLevelTable = ({ keyword, serviceId, status, fromTo }: Props) => {
         pagination={{ pageSize: 9 }}
         rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
         className="custom-table"
-        columns={columns} dataSource={numberLevels.filter(numberLevel => !keyword || accountMap?.get(numberLevel.account_id ?? "")?.full_name?.includes(keyword)).filter(numberLevel => serviceId === "all" || numberLevel.service_id === serviceId).filter(numberLevel => status === "all" || numberLevel.status === status)} />
+        columns={columns} dataSource={numberLevels.filter(numberLevel => !keyword || accountMap?.get(numberLevel.account_id ?? "")?.full_name?.includes(keyword))
+            .filter(numberLevel => serviceId === "all" || numberLevel.service_id === serviceId)
+            .filter(numberLevel => status === "all" || numberLevel.status === status)
+            .filter(numberLevel => supply === "all" || numberLevel.supply === supply)
+        }
+    />
 }
 
 export default NumberLevelTable;
