@@ -1,16 +1,17 @@
 import { Progress } from "antd"
 import m from "./styles.module.css"
 import { FunctionUtil } from "@/app/util/FunctionUtil"
+import Image from "next/image"
 type Props = {
     progressColor: string
     data: number,
-    children: React.JSX.Element,
+    image: string,
     title: string,
     waitData: number,
     usedData: number,
     skipData: number
 }
-const NumberLevelProgressElement = ({ progressColor, children, data, waitData, skipData, usedData, title }: Props) => {
+const NumberLevelProgressElement = ({ progressColor, image, data, waitData, skipData, usedData, title }: Props) => {
     const calculatorPercent = (typeData: number) => {
         return Math.round((typeData * 100) / data)
     }
@@ -25,7 +26,7 @@ const NumberLevelProgressElement = ({ progressColor, children, data, waitData, s
 
                 <div className="ml-3">
                     <div className="font-extrabold text-2xl leading-9">{FunctionUtil.formatNumber(data)}</div>
-                    <div className={`text-sm leading-[21px] text-[${progressColor}] font-semibold`}>{children} {title}</div>
+                    <div className={`text-sm leading-[21px] text-[${progressColor}] font-semibold flex`}><Image className="mr-1" src={image} width={14} height={14} alt={title} /><label>{title}</label> </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-0">

@@ -1,88 +1,35 @@
 'use client'
-import { Button, Menu, MenuProps } from "antd";
+import { Button } from "antd";
 import { useEffect, useState } from "react";
-import { AppstoreOutlined, BlockOutlined, DesktopOutlined, CommentOutlined, SettingOutlined, BarChartOutlined, MoreOutlined, LogoutOutlined } from "@ant-design/icons";
 import { LogoElement } from "./element/LogoElement";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { authAction } from "@/redux/slice/authSlice";
 import { useAppDispatch } from "@/redux/hook";
-import path from "path";
+import AsideItem from "./AsideItem";
+import DropdownMenu from "./dropdown-menu/DropdownMenu";
+import Image from "next/image";
 export const AsideAdmin = () => {
-    type MenuItem = Required<MenuProps>['items'][number];
     const pathname = usePathname();
     const [selectedKey, setSelectedKey] = useState<string>("");
     const router = useRouter();
     useEffect(() => {
         // Set the selected key based on the current route
         if (pathname.includes('/dashboard')) {
-            setSelectedKey('sub1');
+            setSelectedKey('dashboard');
         } else if (pathname.includes('/device')) {
-            setSelectedKey('sub2');
+            setSelectedKey('device');
         } else if (pathname.includes('/service')) {
-            setSelectedKey('sub3');
+            setSelectedKey('service');
         } else if (pathname.includes('/number-level')) {
-            setSelectedKey('sub4');
+            setSelectedKey('number-level');
         } else if (pathname.includes('/report')) {
-            setSelectedKey('sub5');
+            setSelectedKey('report');
         } else if (pathname.includes('/setting')) {
-            let sub = "sub6-"
-            if (pathname.includes("/role")) {
-                sub += "1"
-            } else if (pathname.includes("/account")) {
-                sub += "2"
-            } else if (pathname.includes("/user-log")) {
-                sub += "3"
-            }
-            setSelectedKey(sub)
+            setSelectedKey('setting');
         }
     }, [pathname]);
-    const items: MenuItem[] = [
-        {
-            key: 'sub1',
-            label: 'Dashboard',
-            icon: <AppstoreOutlined />,
-            onClick: () => router.push('/manager/dashboard')
-        },
-        {
-            key: 'sub2',
-            label: 'Thiết bị',
-            icon: <DesktopOutlined />,
-            onClick: () => router.push('/manager/device')
-        },
-        {
-            key: "sub3",
-            label: 'Dịch vụ',
-            icon: <CommentOutlined />,
-            onClick: () => router.push('/manager/service')
-        },
-        {
-            key: 'sub4',
-            label: 'Cấp số',
-            icon: <BlockOutlined />,
-            onClick: () => router.push('/manager/number-level')
-        },
-        {
-            key: 'sub5',
-            label: 'Báo cáo',
-            icon: <BarChartOutlined />,
-            onClick: () => router.push('/manager/report')
-        },
-        {
-            key: 'sub6',
-            label: <>Cài đặt hệ thống <MoreOutlined /></>,
-            icon: <SettingOutlined />,
-            children: [
-                { key: 'sub6-1', label: "Quản lý vai trò", onClick: () => router.push("/manager/setting/role") },
-                { key: 'sub6-2', label: "Quản lý tài khoản", onClick: () => router.push("/manager/setting/account") },
-                { key: 'sub6-3', label: "Nhật ký người dùng", onClick: () => router.push("/manager/setting/user-log") },
-            ],
-        },
-    ];
     const dispatch = useAppDispatch();
-    const handleSelect: MenuProps['onSelect'] = ({ key }) => {
-        setSelectedKey(key);
-    };
     const handleLogout = () => {
         dispatch(authAction.reset())
         localStorage.removeItem("auth")
@@ -94,14 +41,53 @@ export const AsideAdmin = () => {
                 <LogoElement className="mx-auto pt-8 pb-10" height={64} width={80} />
             </Link>
             <div className="flex flex-col justify-between grow custom-menu">
-                <Menu
-                    mode="vertical"
-                    selectedKeys={[selectedKey]}
-                    onSelect={handleSelect}
-                    className="grow"
-                    items={items}
-                />
-                <Button className="flex justify-start h-12 w-44 font-bold" onClick={() => handleLogout()} type="text"><LogoutOutlined className="mr-2" /><span>Đăng xuất</span></Button>
+                <div className="grid grid-cols-1 gap-[6px]">
+                    <AsideItem label="Dashboard"
+                        selected={selectedKey === "dashboard"}
+                        onClick={() => router.push("/manager/dashboard")}
+                        imageDefault="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdefault%2Fdashboard.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageHover="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fhover%2Fdashboard.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageSelected="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fselected%2Fdashboard.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                    />
+                    <AsideItem label="Thiết bị"
+                        selected={selectedKey === "device"}
+                        onClick={() => router.push("/manager/device")}
+                        imageDefault="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdefault%2Fdevice.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageHover="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fhover%2Fdevice.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageSelected="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fselected%2Fdevice.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                    />
+                    <AsideItem label="Dịch vụ"
+                        selected={selectedKey === "service"}
+                        onClick={() => router.push("/manager/service")}
+                        imageDefault="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdefault%2Fservice.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageHover="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fhover%2Fservice.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageSelected="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fselected%2Fservice.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                    />
+                    <AsideItem label="Cấp số"
+                        selected={selectedKey === "number-level"}
+                        onClick={() => router.push("/manager/number-level")}
+                        imageDefault="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdefault%2Fnumber-level.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageHover="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fhover%2Fnumber-level.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageSelected="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fselected%2Fnumber-level.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                    />
+                    <AsideItem label="Báo cáo"
+                        selected={selectedKey === "report"}
+                        onClick={() => router.push("/manager/report")}
+                        imageDefault="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdefault%2Freport.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageHover="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fhover%2Freport.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        imageSelected="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fselected%2Freport.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                    />
+                    <DropdownMenu imageDefault="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fdefault%2Fsetting.svg?alt=media&token=c5f3f1d5-925f-4edd-a221-74d6acc715b8"
+                        imageHover="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fhover%2Fsetting.svg?alt=media&token=c5f3f1d5-925f-4edd-a221-74d6acc715b8"
+                        imageSelected="https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fselected%2Fsetting.svg?alt=media&token=dc9027e8-ec33-496e-a853-95dfd13878ab"
+                        label="Cài đặt hệ thống"
+                        selected={selectedKey === "setting"}
+                    />
+                </div>
+
+                <Button className="flex justify-start h-12 w-44 font-bold" onClick={() => handleLogout()} type="text">
+                    <Image className="mr-1" src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Flogout.svg?alt=media&token=eda76e67-e7aa-4d61-9edc-2ae0c4f31e1f"} width={20} height={20} alt="logout" />
+                    <span>Đăng xuất</span></Button>
             </div>
         </div>
     )

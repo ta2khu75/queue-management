@@ -12,5 +12,6 @@ interface NumberLevel {
     number: string,
     fullName?: string,
     phoneNumber?: string,
-    email?: string
+    email?: string,
+    supply?: string
 }

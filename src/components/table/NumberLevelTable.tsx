@@ -60,8 +60,8 @@ const NumberLevelTable = ({ keyword, serviceId, status, fromTo }: Props) => {
         },
         {
             title: "Nguồn cấp",
-            dataIndex: "service",
-            key: 'status',
+            dataIndex: "supply",
+            key: 'supply',
         },
         {
             dataIndex: "id",
@@ -70,6 +70,7 @@ const NumberLevelTable = ({ keyword, serviceId, status, fromTo }: Props) => {
         },
     ];
     const dispatch = useAppDispatch()
+    const numberLevelCollectionRef = collection(db, "number-levels");
     const accountState = useAppSelector(state => state.account)
     const [numberLevels, setNumberLevels] = useState<NumberLevel[]>([])
     const serviceState = useAppSelector(state => state.service)
@@ -81,7 +82,7 @@ const NumberLevelTable = ({ keyword, serviceId, status, fromTo }: Props) => {
         if (accountState.accounts.length === 0)
             dispatch(accountAction.fetchReadAll())
         if (fromTo?.[0] && fromTo?.[1]) {
-            BaseService.query<NumberLevel>(query(collection(db, "number-levels"), where("grant_time", ">=", fromTo[0].toDate()), where("grant_time", "<=", fromTo[1].toDate()), orderBy("grant_time", "desc"))).then(data => {
+            BaseService.query<NumberLevel>(query(numberLevelCollectionRef, where("grant_time", ">=", fromTo[0].toDate()), where("grant_time", "<=", fromTo[1].toDate()), orderBy("grant_time", "desc"))).then(data => {
                 setNumberLevels(data)
             })
         } else {

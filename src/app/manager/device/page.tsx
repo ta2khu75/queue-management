@@ -1,11 +1,12 @@
 "use client"
 import DeviceTable from "@/components/table/DeviceTable"
 import { Button, Form, Input, Select } from "antd"
-import { PlusOutlined, CaretDownOutlined } from "@ant-design/icons"
+import { CaretDownOutlined } from "@ant-design/icons"
 import { usePathname, useRouter } from "next/navigation"
 import HeaderAdmin from "@/components/HeaderAdmin"
 import { useState } from "react"
 import useDebounce from "@/hook/useDebounce"
+import Image from "next/image"
 const Page = () => {
     const optionActive = ["Hoạt động", "Ngưng hoạt động"];
     const optionConnect = ["Kết nối", "Mất kết nối"]
@@ -36,7 +37,7 @@ const Page = () => {
             <div className='flex justify-between'>
                 <DeviceTable keyword={keywordDebounce} status={status} connectStatus={statusConnect} />
                 <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/device/add')}>
-                    <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><PlusOutlined /></div>
+                    <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fadd.svg?alt=media&token=30041c15-ff4c-4c95-b7a9-c6abf7aee19f"} width={28} height={28} alt="add" />
                     <div className='text-primary'>Thêm <br /> thiết bị</div>
                 </Button>
             </div>

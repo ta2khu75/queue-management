@@ -1,14 +1,16 @@
 import { Progress } from "antd"
 import m from "./styles.module.css"
+import Image from "next/image"
 type Props = {
     progressColor: string
     activeData: number
     inActiveData: number
     data: number,
-    children: React.JSX.Element,
+    image: string,
+    // children: React.JSX.Element,
     title: string
 }
-const DashboardProgressElement = ({ progressColor, children, data, activeData, inActiveData, title }: Props) => {
+const DashboardProgressElement = ({ progressColor, image, data, activeData, inActiveData, title }: Props) => {
     const calculatorPercent = (typeData: number) => {
         return Math.round((typeData * 100) / data)
     }
@@ -22,7 +24,7 @@ const DashboardProgressElement = ({ progressColor, children, data, activeData, i
 
                 <div className="ml-3">
                     <div className="font-extrabold text-2xl leading-9">{data}</div>
-                    <div className={`text-sm leading-[21px] text-[${progressColor}] font-semibold`}>{children} {title}</div>
+                    <div className={`text-sm leading-[21px] text-[${progressColor}] font-semibold flex`}><Image className="mr-1" src={image} width={14} height={14} alt={title} /><label>{title}</label></div>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-[5px]">

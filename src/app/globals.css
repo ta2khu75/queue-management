@@ -281,20 +281,46 @@ h6 {
     height: 44px;
 }
 
-.ant-picker-focused {
+.ant-picker-focused,
+.ant-picker:hover {
     border-color: #FFAC6A !important;
     /* Màu viền khi focus */
+}
+
+.ant-picker-cell-selected
+ .ant-picker-cell-inner,
+.ant-picker-cell-range-start .ant-picker-cell-inner,
+.ant-picker-cell-range-end .ant-picker-cell-inner
+{
+    background-color: #FF7506 !important;
+    /* Màu nền khi chọn ngày */
+    color: white;
+    /* Màu chữ */
+}
+
+
+.ant-picker-cell-in-range .ant-picker-cell-inner {
+    background-color: #FFF2E7;
+    color: #535261;
 }
 
 .ant-picker-suffix {
     color: #FF7506 !important;
 }
 
+.ant-picker-cell-today {
+    border-color: #FF7506 !important;
+
+}
+
+.ant-picker-cell-today .ant-picker-cell-inner {
+    border: 1px solid #FF5733;
+}
+
 .custom-modal .ant-modal-content {
     padding: 0 !important;
     border-radius: 24px !important;
     margin: 0px !important;
-    /* Remove padding from modal content */
 }
 
 .custom-modal .ant-modal-body {

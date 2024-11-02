@@ -7,8 +7,15 @@ const nextConfig = {
                 hostname: 'firebasestorage.googleapis.com',
                 port: '',
                 pathname: '/**',
-            },
+            },{
+                protocol: 'https',
+                hostname: 'nextjs.org',
+                port: '',
+                pathname: '/icons/**',
+            }
         ],
+        dangerouslyAllowSVG: true, // Enable SVG support
+        contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;", // Optional security policy
     },
 };
 

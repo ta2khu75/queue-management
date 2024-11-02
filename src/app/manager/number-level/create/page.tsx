@@ -67,7 +67,9 @@ const Page = () => {
                     } else {
                         number = from
                     }
-                } if (number === to) {
+                }
+
+                if (number === to) {
                     number = from
                 }
             }
@@ -92,7 +94,7 @@ const Page = () => {
 
                 numberLevel = `${numberLevel}${surfix}`
             }
-            BaseService.create<NumberLevel>(collectionRef, { account_id: account?.id ?? "", expiry: HashUtil.hour(), status: NumberLevelStatus.WAITING, service_id: service.id, grant_time: new Date(), number_level: numberLevel, number }).then(data => {
+            BaseService.create<NumberLevel>(collectionRef, { account_id: account?.id ?? "", expiry: HashUtil.hour(), status: NumberLevelStatus.WAITING, service_id: service.id, grant_time: new Date(), number_level: numberLevel, number, supply: "Hệ thống" }).then(data => {
                 console.log(data);
                 setNumberLevel(data)
             }).catch(error => {

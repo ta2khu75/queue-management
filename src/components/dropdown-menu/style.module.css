@@ -1,0 +1,40 @@
+/* dropdown-wrapper positioning */
+.dropdown-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* dropdown-content styling */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    /* Đặt dropdown bên cạnh AsideSubItem */
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 0 12px 12px 0;
+    z-index: 1;
+}
+
+/* Show dropdown-content when hovering over dropdown-wrapper */
+.dropdown-wrapper:hover .dropdown-content {
+    display: block;
+}
+
+/* Dropdown items styling */
+.dropdown-content a {
+    border-radius: 0 12px 12px 0;
+    width: 200px;
+    padding: 12px 0px;
+    padding-left: 16px;
+    display: block;
+    font-weight: 600;
+}
+
+.dropdown-content a:hover {
+    color: #FF7506;
+    background-color: #FFF2E7 !important;
+}

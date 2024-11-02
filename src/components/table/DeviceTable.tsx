@@ -5,7 +5,7 @@ import { ConnectStatus } from "@/type/ConnectStatus";
 import { Device } from "@/type/Device";
 import { FetchStatus } from "@/type/FetchStatus";
 import { Status } from "@/type/Status";
-import { Table, TableProps } from "antd";
+import { Popover, Table, TableProps } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 type Props = {
@@ -50,7 +50,13 @@ const DeviceTable = ({ keyword, status, connectStatus }: Props) => {
             dataIndex: 'service_ids',
             render: (service_ids: string[]) => <>
                 <div className="truncate w-[180px]">{service_ids?.map(service_id => `${serviceMap?.get(service_id)?.service_name}, `)}{service_ids?.length > 0 ? "..." : ""}</div>
-                <div><Link href={""} className="underline text-[#4277FF] decoration-1">Xem thêm</Link></div>
+                {service_ids?.length > 0 && <Popover
+                    placement="top"
+                    trigger="click"
+                    content={service_ids?.map(service_id => `${serviceMap?.get(service_id)?.service_name}, `)}>
+                    <button className="underline text-[#4277FF] decoration-1">Xem thêm</button>
+                </Popover>
+                }
             </>
         },
         {
@@ -90,11 +96,13 @@ const DeviceTable = ({ keyword, status, connectStatus }: Props) => {
     if (deviceState.fetchStatus === FetchStatus.REJECTED) {
         return <div>something wrong</div>
     }
-    return <Table<Device> style={{ width: "1112px" }}
-        bordered
-        pagination={{ pageSize: 9 }}
-        rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
-        className="custom-table" columns={columns} dataSource={deviceState.devices.filter(device => device.device_name?.includes(keyword)).filter(device => status === "all" || device.status === status).filter(device => connectStatus === "all" || device.connect_status === connectStatus)} />
+    return (
+        <Table<Device> style={{ width: "1112px" }}
+            bordered
+            pagination={{ pageSize: 9 }}
+            rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
+            className="custom-table" columns={columns} dataSource={deviceState.devices.filter(device => device.device_name?.includes(keyword)).filter(device => status === "all" || device.status === status).filter(device => connectStatus === "all" || device.connect_status === connectStatus)} />
+    )
 }
 
 export default DeviceTable

@@ -3,9 +3,9 @@ import HeaderAdmin from '@/components/HeaderAdmin'
 import { Button, Form, Input } from 'antd'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import { PlusOutlined } from "@ant-design/icons"
 import RoleTable from '@/components/table/RoleTable'
 import useDebounce from '@/hook/useDebounce'
+import Image from 'next/image'
 const Page = () => {
     const pathname = usePathname()
     const router = useRouter()
@@ -25,7 +25,7 @@ const Page = () => {
             <div className='flex justify-between'>
                 <RoleTable keyword={debounceKeyword} />
                 <Button type="text" className="w-20 h-24  flex flex-col font-semibold" onClick={() => router.push('/manager/setting/role/add')}>
-                    <div className="text-white text-sm bg-primary p-1 rounded-md flex items-center"><PlusOutlined /></div>
+                    <Image src={"https://firebasestorage.googleapis.com/v0/b/queue-management-b8d91.appspot.com/o/icon%2Fadd.svg?alt=media&token=30041c15-ff4c-4c95-b7a9-c6abf7aee19f"} width={28} height={28} alt="add" />
                     <div className='text-primary'>Thêm <br />vai trò</div>
                 </Button>
             </div>
