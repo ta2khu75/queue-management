@@ -99,7 +99,7 @@ const DeviceTable = ({ keyword, status, connectStatus }: Props) => {
     return (
         <Table<Device> style={{ width: "1112px" }}
             bordered
-            pagination={{ pageSize: 9 }}
+            pagination={{ pageSize: 8, pageSizeOptions: [], showSizeChanger: false }}
             rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
             className="custom-table" columns={columns} dataSource={deviceState.devices.filter(device => device.device_name?.includes(keyword)).filter(device => status === "all" || device.status === status).filter(device => connectStatus === "all" || device.connect_status === connectStatus)} />
     )

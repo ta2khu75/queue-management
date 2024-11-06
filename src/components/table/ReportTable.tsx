@@ -57,15 +57,13 @@ const ReportTable = ({ fromTo }: Props) => {
         if (data) {
             const workbook = XLSX.utils.book_new();
             const worksheet = XLSX.utils.json_to_sheet(data);
-            // Set column widths based on the content
             const columnWidths = Object.keys(data[0]).map((key) => ({
                 wch: Math.max(
-                    key.length, // Header width
+                    key.length,
                     ...data.map(row => (row[key] ? row[key].toString().length : 0)) // Data width
                 ),
             }));
             worksheet["!cols"] = columnWidths;
-            // Append worksheet to workbook and write file
             XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
             XLSX.writeFile(workbook, dayjs().format("HH:mm_DD-MM-YYYY") + ".xlsx");
         }
@@ -110,7 +108,7 @@ const ReportTable = ({ fromTo }: Props) => {
         <div className='flex justify-between'>
             <Table<NumberLevel> style={{ width: "1112px" }}
                 bordered
-                pagination={{ pageSize: 9 }}
+                pagination={{ pageSize: 9, pageSizeOptions: [], showSizeChanger: false }}
                 rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
                 className="custom-table" columns={columns} dataSource={numberLevels} />
             <Button type="text" className="w-20 h-[75px]  flex flex-col font-semibold" onClick={() => handleDownloadClick()}>

@@ -112,7 +112,7 @@ const NumberLevelTable = ({ keyword, serviceId, status, supply, fromTo }: Props)
     }
     return <Table<NumberLevel> style={{ width: "1112px" }}
         bordered
-        pagination={{ pageSize: 9 }}
+        pagination={{ pageSize: 9, pageSizeOptions: [], showSizeChanger: false }}
         rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
         className="custom-table"
         columns={columns} dataSource={numberLevels.filter(numberLevel => !keyword || accountMap?.get(numberLevel.account_id ?? "")?.full_name?.includes(keyword))

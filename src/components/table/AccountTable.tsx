@@ -79,7 +79,7 @@ const AccountTable = ({ keyword, roleId }: Props) => {
         <div className="h-[546px] w-[1112px]">
             <Table<Account>
                 bordered
-                pagination={{ pageSize: 9 }}
+                pagination={{ pageSize: 8, pageSizeOptions: [], showSizeChanger: false }}
                 rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
                 className="custom-table" columns={columns} dataSource={accountState.accounts.filter(account => account.username?.includes(keyword) && (roleId === "all" || account.role_id === roleId))} />
         </div>

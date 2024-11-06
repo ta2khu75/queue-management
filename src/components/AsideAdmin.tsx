@@ -14,7 +14,6 @@ export const AsideAdmin = () => {
     const [selectedKey, setSelectedKey] = useState<string>("");
     const router = useRouter();
     useEffect(() => {
-        // Set the selected key based on the current route
         if (pathname.includes('/dashboard')) {
             setSelectedKey('dashboard');
         } else if (pathname.includes('/device')) {
@@ -27,6 +26,8 @@ export const AsideAdmin = () => {
             setSelectedKey('report');
         } else if (pathname.includes('/setting')) {
             setSelectedKey('setting');
+        } else {
+            setSelectedKey("")
         }
     }, [pathname]);
     const dispatch = useAppDispatch();

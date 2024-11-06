@@ -57,7 +57,7 @@ const ServiceTable = ({ keyword, status }: Props) => {
     }
     return <Table<Service> style={{ width: "1112px" }}
         bordered
-        pagination={{ pageSize: 9 }}
+        pagination={{ pageSize: 9, pageSizeOptions: [], showSizeChanger: false }}
         rowClassName={(record: object, index: number) => (index % 2 !== 0 ? 'odd-row' : 'even-row') + " custom-row"}
         className="custom-table" columns={columns} dataSource={serviceState.services.filter(service => service.service_name?.includes(keyword)).filter(service => status === "all" || status === service.status)} />
 }

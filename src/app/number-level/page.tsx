@@ -1,5 +1,4 @@
 "use client"
-import HeaderAdmin from "@/components/HeaderAdmin";
 import { Button, Form, FormProps, Input, Modal, Select } from "antd"
 import { CaretDownOutlined } from "@ant-design/icons"
 import { usePathname } from "next/navigation";
@@ -14,6 +13,7 @@ import { db } from "@/config/FirebaseConfig";
 import { NumberLevelStatus } from "@/type/NumberLevelStatus";
 import dayjs from "dayjs"
 import { HashUtil } from "@/app/util/HashUtil";
+import HeaderUser from "@/components/HeaderUser";
 const Page = () => {
     const dispatch = useAppDispatch()
     const collectionRef = collection(db, "number-levels")
@@ -143,7 +143,7 @@ const Page = () => {
     }
     return (
         <div className="flex flex-col">
-            <HeaderAdmin paths={[{ path: "", title: "Cấp số" }, { path: "/manager/number-level", title: "Danh sách cấp số" }, { path: pathname, title: "Cấp số mới" }]} />
+            <HeaderUser paths={[{ path: "", title: "Cấp số" }, { path: "/manager/number-level", title: "Danh sách cấp số" }, { path: pathname, title: "Cấp số mới" }]} />
             <p className="text-2xl font-bold text-primary pt-4 pb-6">Quản lý cấp số</p>
             <Form onFinish={() => setOpenForm(true)} layout="vertical" className=" text-center w-[1192px] h-[604px] bg-white rounded-2xl" >
                 <div className="text-[32px] text-super_primary font-bold leading-8 mt-6 mb-5">CẤP SỐ MỚI</div>
