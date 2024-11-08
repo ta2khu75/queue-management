@@ -14,9 +14,11 @@ import { serviceAction } from "@/redux/slice/serviceClice"
 import { DefaultOptionType } from "antd/es/select"
 import { deviceAction } from "@/redux/slice/deviceSlice"
 import { Device } from "@/type/Device"
+import { FunctionUtil } from "@/app/util/FunctionUtil"
 
 const Page = ({ params }: { params: { id: string } }) => {
     const [form] = Form.useForm<Device>()
+    const deviceId = FunctionUtil.getIdFromPath(params.id)
     const dispatch = useAppDispatch()
     const services = useAppSelector(state => state.service.services)
     const deviceState = useAppSelector(state => state.device)
@@ -38,7 +40,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         if (deviceState.devices.length === 0)
             fetchDeviceById()
         else {
-            const device = deviceState.devices.find((d) => d.id === params.id)
+            const device = deviceState.devices.find((d) => d.id === deviceId)
             if (device) form.setFieldsValue(device);
         }
     }, [params.id])
@@ -53,7 +55,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         }
     }, [deviceState.fetchStatus])
     const fetchDeviceById = async () => {
-        const device = await BaseService.readById<Device>(deviceCollectionRef, params.id)
+        const device = await BaseService.readById<Device>(deviceCollectionRef, deviceId)
         if (device) { form.setFieldsValue(device); console.log(device); }
 
     }

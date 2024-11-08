@@ -1,3 +1,4 @@
+import { FunctionUtil } from "@/app/util/FunctionUtil";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { serviceAction } from "@/redux/slice/serviceClice";
 import { FetchStatus } from "@/type/FetchStatus";
@@ -35,12 +36,12 @@ const ServiceTable = ({ keyword, status }: Props) => {
         {
             key: 'details',
             dataIndex: "id",
-            render: (text) => <Link href={`/manager/service/details/${text}`} className="underline text-[#4277FF] decoration-1" >Chi tiết</Link>
+            render: (id: string, record: Service) => <Link href={`/manager/service/details/${FunctionUtil.convertSlugUrl(record.service_name)}-${id}.html`} className="underline text-[#4277FF] decoration-1" >Chi tiết</Link>
         },
         {
             key: '',
             dataIndex: "id",
-            render: (text) => <Link href={`/manager/service/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
+            render: (id: string, record: Service) => <Link href={`/manager/service/edit/${FunctionUtil.convertSlugUrl(record.service_name)}-${id}.html`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
     const dispatch = useAppDispatch()

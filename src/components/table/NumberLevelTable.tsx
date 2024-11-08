@@ -67,7 +67,7 @@ const NumberLevelTable = ({ keyword, serviceId, status, supply, fromTo }: Props)
         {
             dataIndex: "id",
             key: 'details',
-            render: (id) => <Link href={`/manager/number-level/details/${id}`} className="underline text-[#4277FF] decoration-1">Chi tiết</Link>
+            render: (id: string) => <Link href={`/manager/number-level/details/${id}`} className="underline text-[#4277FF] decoration-1">Chi tiết</Link>
         },
     ];
     const dispatch = useAppDispatch()

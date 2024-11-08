@@ -1,4 +1,5 @@
 "use client"
+import { FunctionUtil } from "@/app/util/FunctionUtil";
 import InputServiceElement from "@/components/element/InputServiceElement";
 import HeaderAdmin from "@/components/HeaderAdmin";
 import { db } from "@/config/FirebaseConfig";
@@ -14,6 +15,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = ({ params }: { params: { id: string } }) => {
+    const serviceId = FunctionUtil.getIdFromPath(params.id)
     const deviceCollectionRef = collection(db, "services")
     const serviceState = useAppSelector(state => state.service)
     const dispatch = useAppDispatch()
@@ -41,13 +43,13 @@ const Page = ({ params }: { params: { id: string } }) => {
             const numberIndex = number_rules.findIndex(number_rule => number_rule === NumberRule.SURFIX)
             number_rules[numberIndex] = `${number_rules[numberIndex]} ${surfix}`
         }
-        dispatch(serviceAction.fetchUpdate({ id: params.id, service: values }))
+        dispatch(serviceAction.fetchUpdate({ id: serviceId, service: values }))
     };
     useEffect(() => {
         if (serviceState.services.length === 0) {
             fetchServiceById()
         } else {
-            const service = serviceState.services.find((s) => s.id === params.id)
+            const service = serviceState.services.find((s) => s.id === serviceId)
             if (service !== undefined) {
                 const data = setNumberRulerService({ ...service })
                 form.setFieldsValue(data)

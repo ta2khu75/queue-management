@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook"
 import { accountAction } from "@/redux/slice/accountSlice"
 import BaseService from "@/service/BaseService"
 import { NumberLevel } from "@/type/NumberLevel"
-import { collection, orderBy, query, Timestamp } from "firebase/firestore"
+import { collection, limit, orderBy, query, Timestamp } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import dayjs from "dayjs"
 const NotificationElement = () => {
@@ -28,7 +28,7 @@ const NotificationElement = () => {
         fetchReadAll()
     }, [accountState.accounts.length])
     const fetchReadAll = () => {
-        BaseService.query<NumberLevel>(query(numberLevelCollectionRef, orderBy("grant_time", "desc"))).then(data => {
+        BaseService.query<NumberLevel>(query(numberLevelCollectionRef, orderBy("grant_time", "desc"), limit(10))).then(data => {
             setNumberLevels(data)
         })
     }

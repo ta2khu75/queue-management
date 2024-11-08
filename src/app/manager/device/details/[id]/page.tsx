@@ -11,7 +11,9 @@ import { useAppDispatch, useAppSelector } from '@/redux/hook'
 import { serviceAction } from '@/redux/slice/serviceClice'
 import { Device } from '@/type/Device'
 import Image from 'next/image'
+import { FunctionUtil } from '@/app/util/FunctionUtil'
 const Page = ({ params }: { params: { id: string } }) => {
+    const deviceId = FunctionUtil.getIdFromPath(params.id)
     const deviceCollectionRef = collection(db, "devices")
     const deviceState = useAppSelector(state => state.device)
     const [device, setDevice] = useState<Device>()
@@ -26,7 +28,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         if (deviceState.devices.length === 0) {
             fetchDeviceById()
         } else {
-            setDevice(deviceState.devices.find((d) => d.id === params.id))
+            setDevice(deviceState.devices.find((d) => d.id === deviceId))
         }
     }, [params.id])
     useEffect(() => {
@@ -38,7 +40,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         }
     }, [device, serviceState.services.length])
     const fetchDeviceById = () => {
-        BaseService.readById<Device>(deviceCollectionRef, params.id).then((device) => { setDevice(device) }).then((error) => console.log(error))
+        BaseService.readById<Device>(deviceCollectionRef, deviceId).then((device) => { setDevice(device) }).then((error) => console.log(error))
     }
     const router = useRouter()
     return (

@@ -12,7 +12,9 @@ import { useAppSelector } from '@/redux/hook'
 import InputServiceElement from '@/components/element/InputServiceElement'
 import ServiceNumberLevelTable from '@/components/table/ServiceNumberLevelTable'
 import Image from 'next/image'
+import { FunctionUtil } from '@/app/util/FunctionUtil'
 const Page = ({ params }: { params: { id: string } }) => {
+    const serviceId = FunctionUtil.getIdFromPath(params.id)
     const serviceCollectionRef = collection(db, "services")
     const serviceState = useAppSelector(state => state.service)
     const [from, setFrom] = useState("")
@@ -27,7 +29,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         if (serviceState.services.length === 0) {
             fetchServiceById()
         } else {
-            const service = serviceState.services.find((s) => s.id === params.id)
+            const service = serviceState.services.find((s) => s.id === serviceId)
             if (service !== undefined) {
                 const data = setNumberRulerService({ ...service })
                 setService(data)
@@ -36,7 +38,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     }, [params.id])
 
     const fetchServiceById = () => {
-        BaseService.readById<Service>(serviceCollectionRef, params.id).then((response) => {
+        BaseService.readById<Service>(serviceCollectionRef, serviceId).then((response) => {
             if (response) {
                 const data = setNumberRulerService({ ...response })
                 setService(data)

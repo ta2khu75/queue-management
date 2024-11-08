@@ -1,3 +1,4 @@
+import { FunctionUtil } from "@/app/util/FunctionUtil";
 import { db } from "@/config/FirebaseConfig";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { roleAction } from "@/redux/slice/roleSlice";
@@ -29,7 +30,7 @@ const RoleTable = ({ keyword }: Props) => {
         {
             key: 'update',
             dataIndex: "id",
-            render: (text) => <Link href={`/manager/setting/role/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
+            render: (id: string, record: Role) => <Link href={`/manager/setting/role/edit/${FunctionUtil.convertSlugUrl(record.role_name)}-${id}.html`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
     const roleState = useAppSelector(state => state.role)

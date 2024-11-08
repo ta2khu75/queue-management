@@ -1,3 +1,4 @@
+import { FunctionUtil } from "@/app/util/FunctionUtil";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { deviceAction } from "@/redux/slice/deviceSlice";
 import { serviceAction } from "@/redux/slice/serviceClice";
@@ -62,12 +63,12 @@ const DeviceTable = ({ keyword, status, connectStatus }: Props) => {
         {
             key: 'details',
             dataIndex: "id",
-            render: (text) => <Link href={`/manager/device/details/${text}`} className="underline text-[#4277FF] decoration-1">Chi tiết</Link>
+            render: (id: string, record: Device) => <Link href={`/manager/device/details/${FunctionUtil.convertSlugUrl(record.device_name)}-${id}.html`} className="underline text-[#4277FF] decoration-1">Chi tiết</Link>
         },
         {
             key: 'update',
             dataIndex: "id",
-            render: (text) => <Link href={`/manager/device/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
+            render: (id: string, record: Device) => <Link href={`/manager/device/edit/${FunctionUtil.convertSlugUrl(record.device_name)}-${id}.html`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
     const dispatch = useAppDispatch()

@@ -1,4 +1,5 @@
 "use client"
+import { FunctionUtil } from "@/app/util/FunctionUtil";
 import HeaderAdmin from "@/components/HeaderAdmin";
 import { db } from "@/config/FirebaseConfig";
 import useNotification from "@/hook/NotificationHook";
@@ -12,6 +13,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = ({ params }: { params: { id: string } }) => {
+    const roleId = FunctionUtil.getIdFromPath(params.id)
     const dispatch = useAppDispatch()
     const roleState = useAppSelector(state => state.role)
     const deviceCollectionRef = collection(db, "roles")
@@ -24,7 +26,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         if (roleState.roles.length === 0) {
             fetchRole()
         } else {
-            const role = roleState.roles.find((r) => r.id === params.id)
+            const role = roleState.roles.find((r) => r.id === roleId)
             if (role !== undefined) {
                 form.setFieldsValue(role)
             }
@@ -40,7 +42,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             }
     }, [roleState.fetchStatus])
     const fetchRole = () => {
-        BaseService.readById<Role>(deviceCollectionRef, params.id).then((role) => { if (role) form.setFieldsValue(role) }).then((error) => console.log(error))
+        BaseService.readById<Role>(deviceCollectionRef, roleId).then((role) => { if (role) form.setFieldsValue(role) }).then((error) => console.log(error))
     }
     const onFinish: FormProps<Role>['onFinish'] = (values) => {
         setFetchStatus(FetchStatus.PENDING)

@@ -47,7 +47,7 @@ const AccountTable = ({ keyword, roleId }: Props) => {
         {
             key: '',
             dataIndex: "id",
-            render: (text) => <Link href={`/manager/setting/account/edit/${text}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
+            render: (id: string) => <Link href={`/manager/setting/account/edit/${id}`} className="underline text-[#4277FF] decoration-1">Cập nhật</Link>
         },
     ];
     const roleState = useAppSelector(state => state.role)
