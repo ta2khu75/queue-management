@@ -4,6 +4,7 @@ import useNotification from "@/hook/NotificationHook";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { deviceAction } from "@/redux/slice/deviceSlice";
 import { serviceAction } from "@/redux/slice/serviceClice";
+import { Device } from "@/type/Device";
 import { FetchStatus } from "@/type/FetchStatus";
 import { Status } from "@/type/Status";
 import { Button, Form, FormProps, Input, Select } from "antd"

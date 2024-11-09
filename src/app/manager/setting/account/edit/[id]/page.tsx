@@ -15,14 +15,16 @@ import { FetchStatus } from "@/type/FetchStatus";
 import { Status } from "@/type/Status";
 const Page = ({ params }: { params: { id: string } }) => {
   const dispatch = useAppDispatch()
+  const [disabledButton, setDisabledButton] = useState(false)
   const [fetchStatus, setFetchStatus] = useState(FetchStatus.IDLE)
   const account = useAppSelector(state => state.account)
   const roles = useAppSelector(state => state.role.roles)
   const router = useRouter()
   const pathname = usePathname()
-  const [form] = Form.useForm()
+  const [form] = Form.useForm<Account>()
   const { contextHolder, openNotification } = useNotification();
   const onFinish: FormProps<Account>['onFinish'] = (values) => {
+    if (disabledButton) return
     setFetchStatus(FetchStatus.PENDING)
     dispatch(accountAction.fetchUpdate({ id: params.id, account: values }))
   };
@@ -38,6 +40,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       const accountExisting = account.accounts.find((a) => a.id === params.id)
       if (accountExisting !== undefined) {
         form.setFieldsValue(accountExisting)
+        setDisabledButton(accountExisting.username === "minh")
       }
     }
   }, [params.id])
@@ -52,9 +55,15 @@ const Page = ({ params }: { params: { id: string } }) => {
     }
   }, [account.fetchStatus])
   const fetchAccountById = () => {
-    BaseService.readById<Role>(collection(db, "accounts"), params.id).then(response => {
-      form.setFieldsValue(response)
+    BaseService.readById<Account>(collection(db, "accounts"), params.id).then(response => {
+      if (response) {
+        form.setFieldsValue(response)
+        setDisabledButton(response.username === "minh")
+      }
     }).catch((error) => console.log(error))
+  }
+  const isDisableButton = () => {
+    return form.getFieldValue("username") === "minh"
   }
   return (
     <div className="flex flex-col">
@@ -131,7 +140,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         </main >
         <div className="flex justify-center items-center mt-[48px]">
           <Button className="h-12 mr-4" onClick={() => router.push("/manager/setting/account")} style={{ width: "147px" }}>Hủy bỏ</Button>
-          <Button className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Cập nhật</Button>
+          <Button disabled={disabledButton} className="h-12 ml-4" htmlType="submit" type="primary" style={{ width: "147px" }}>Cập nhật</Button>
         </div>
       </Form>
     </div >

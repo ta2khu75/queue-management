@@ -3,6 +3,7 @@ import { store } from "../redux/store";
 import { db } from "@/config/FirebaseConfig";
 import { IsUtil } from "@/app/util/IsUtil";
 import { getDownloadURL, StorageReference, uploadBytes } from "firebase/storage";
+import { Device } from "@/type/Device";
 
 export default class BaseService {
     static async create<T extends object>(collectionRef: CollectionReference<DocumentData, DocumentData>, data: T): Promise<T> {

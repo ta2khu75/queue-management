@@ -54,13 +54,16 @@ const ReportTable = ({ fromTo }: Props) => {
                 "Nguồn cấp": numberLevel.supply,
             }
         })
-        if (data) {
+        if (data && data.length > 0) {
             const workbook = XLSX.utils.book_new();
             const worksheet = XLSX.utils.json_to_sheet(data);
             const columnWidths = Object.keys(data[0]).map((key) => ({
                 wch: Math.max(
                     key.length,
-                    ...data.map(row => (row[key] ? row[key].toString().length : 0)) // Data width
+                    ...data.map(row => {
+                        const value = row[key as keyof typeof row];
+                        return value ? value.toString().length : 0;
+                    })
                 ),
             }));
             worksheet["!cols"] = columnWidths;
