@@ -34,6 +34,7 @@ const Page = () => {
     const [serviceCount, setServiceCount] = useState(0)
     const [serviceCountActive, setServiceCountActive] = useState(0)
     const [serviceCountInActive, setServiceCountInActive] = useState(0)
+    //loi o dau
     useEffect(() => {
         fetchReadAllDevice()
         fetchReadAllService()
