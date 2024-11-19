@@ -119,7 +119,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                     </div>
                 </div>
                 <div className="bg-white rounded-2xl py-4 px-6" style={{ width: "718px" }}>
-                    <ServiceNumberLevelTable serviceId={params.id} />
+                    <ServiceNumberLevelTable serviceId={serviceId} />
                 </div>
                 <div className='grid-cols-1 gap-1'>
                     <Button type="text" className="w-20 h-[94px]  flex flex-col font-semibold" onClick={() => router.push(`/manager/service/edit/${params.id}`)}>
